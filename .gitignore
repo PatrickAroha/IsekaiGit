@@ -1,6 +1,12 @@
 # Visual Studio 2015 user specific files
 .vs/
 
+CleanProjectAndPlugins.bat
+*.DotSettings.user
+
+.idea/*
+*.vsconfig\
+
 # Compiled Object files
 *.slo
 *.lo
