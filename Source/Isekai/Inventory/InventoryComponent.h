@@ -7,6 +7,8 @@
 #include "Components/ActorComponent.h"
 #include "InventoryComponent.generated.h"
 
+class UPDA_Master;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ISEKAI_API UInventoryComponent : public UActorComponent
 {
@@ -16,24 +18,21 @@ public:
 	
 	UInventoryComponent();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory")
-	UDataTable* ItemDataTable;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-    TArray<FItemSlot> ItemSlot;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemData")
+	TArray<FItemSlot> ItemSlots;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int32 InventorySize = 6;
 	
-	int AddItem(FItem ItemData, int32 Quantity);
+	int32 AddItem(UPDA_Master* ItemData, int32 Quantity);
 
-	int AddStack(FItem ItemData, int32 Quantity);
+	int AddStack(UPDA_Master* ItemData, int32 Quantity);
 
-	void AddUnique(FItem ItemData, int32 Quantity);
+	void AddUnique(UPDA_Master* ItemData, int32 Quantity);
 
-	int NewStack(FItem ItemData, int32 Quantity);
+	int NewStack(UPDA_Master* ItemData, int32 Quantity);
 
-	void DropItem(FItem ItemData, int32 Quantity);
+	void DropItem(UPDA_Master* ItemData, int32 Quantity);
 
 	void RemoveItem();
 

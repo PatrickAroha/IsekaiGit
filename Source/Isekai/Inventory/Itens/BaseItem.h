@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Isekai/Interfaces/InteractInterface.h"
 #include "GameFramework/Actor.h"
+#include "Isekai/Inventory/PDA_Master.h"
 #include "BaseItem.generated.h"
 
 UCLASS()
@@ -14,11 +15,15 @@ class ISEKAI_API ABaseItem : public AActor, public IInteractInterface
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	FName ItemRowName;
+	UPROPERTY(EditAnywhere, Category = "Item")
+	TObjectPtr<UPDA_Master> ItemInfo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	int32 Quantity = 1;
+	int32 Quantity;
+
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
 	
 	virtual void Interact_Implementation(AActor* Player) override;
 	virtual void EndFocus_Implementation() override;

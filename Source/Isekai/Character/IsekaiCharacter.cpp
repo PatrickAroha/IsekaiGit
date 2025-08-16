@@ -12,6 +12,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "VectorUtil.h"
+#include "Isekai/Inventory/PDA_Master.h"
 #include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -182,9 +183,9 @@ void AIsekaiCharacter::OpenInventory()
 
 	int32 i = 0;
 
-	for (const FItemSlot& S : InventoryComponent->ItemSlot)
+	for (const FItemSlot& S : InventoryComponent->ItemSlots)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[INV] slot: %s x%d"), *S.Item.Name, S.Quantity);
+		UE_LOG(LogTemp, Warning, TEXT("[INV] slot: %d x%d"), S.Item->ID, S.Quantity);
 	}
 }
 

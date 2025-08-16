@@ -1,5 +1,8 @@
 #include "BaseItem.h"
+
+#include "IDetailTreeNode.h"
 #include "Isekai/Inventory/InventoryComponent.h"
+#include "Isekai/Inventory/PDA_Master.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 ABaseItem::ABaseItem()
@@ -12,26 +15,31 @@ ABaseItem::ABaseItem()
 	
 }
 
+#if WITH_EDITOR
+void ABaseItem::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+	if (PropertyChangedEvent.GetPropertyName() == GET_MEMBER_NAME_CHECKED(ThisClass, ItemInfo))
+		if (ItemInfo) Mesh->SetStaticMesh(ItemInfo->WorldMesh);
+	
+}
+#endif
 
 void ABaseItem::Interact_Implementation(AActor* Player)
 {
 	if (UInventoryComponent* Inv = Player->FindComponentByClass<UInventoryComponent>())
 	{
-		static const FString Context(TEXT("Item CollectItem"));
-		if (FItem* ItemData = Inv->ItemDataTable->FindRow<FItem>(ItemRowName, Context))
+		if (int32 StackQuantity = Inv->AddItem(ItemInfo, Quantity); StackQuantity <= 0)
 		{
-
-			if (int32 StackQuantity = Inv->AddItem(*ItemData, Quantity); StackQuantity <= 0)
-			{
-				Destroy();
-			}
-			else
-			{
-				Quantity = StackQuantity;
-			}
+		Destroy();
+		}
+		else
+		{
+		Quantity = StackQuantity;
 		}
 	}
 }
+
 
 void ABaseItem::BeginFocus_Implementation()
 {
@@ -40,6 +48,7 @@ void ABaseItem::BeginFocus_Implementation()
 		Mesh->SetRenderCustomDepth(true);
 	}
 }
+
 
 void ABaseItem::EndFocus_Implementation()
 {

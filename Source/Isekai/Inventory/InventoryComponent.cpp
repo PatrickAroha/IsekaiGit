@@ -2,83 +2,84 @@
 
 
 #include "InventoryComponent.h"
+#include "PDA_Master.h"
 
-UInventoryComponent::UInventoryComponent(): ItemDataTable(nullptr)
+UInventoryComponent::UInventoryComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-int UInventoryComponent::AddItem(FItem ItemData, int32 Quantity)
+int UInventoryComponent::AddItem(UPDA_Master* ItemInfo, int32 Quantity)
 {
-	if (ItemData.bStackable)
-		return AddStack(ItemData, Quantity);
+	if (ItemInfo->bStackable)
+		return AddStack(ItemInfo, Quantity);
 
-	if (ItemSlot.Num() < InventorySize)
+	if (ItemSlots.Num() < InventorySize)
 	{
-		AddUnique(ItemData, 1);
+		AddUnique(ItemInfo, 1);
 		return 0;
 	}
 	return Quantity;
 }
 
-void UInventoryComponent::AddUnique(FItem ItemData, int32 Quantity)
+void UInventoryComponent::AddUnique(UPDA_Master* ItemInfo, int32 Quantity)
 {
 	FItemSlot NewSlot;
-	NewSlot.Item = ItemData;
+	NewSlot.Item = ItemInfo;
 	NewSlot.Quantity = Quantity;
-	ItemSlot.Add(NewSlot);
+	ItemSlots.Add(NewSlot);
 }
 
-int UInventoryComponent::AddStack(FItem ItemData, int32 Quantity) 
+int UInventoryComponent::AddStack(UPDA_Master* ItemInfo, int32 Quantity) 
 {
-	for (FItemSlot& Slots : ItemSlot)
+	for (FItemSlot& Slots : ItemSlots)
 	{
-		if (Slots.Item.ID == ItemData.ID)
+		if (Slots.Item->ID == ItemInfo->ID)
 		{
-			const int32 Espaco = ItemData.MaxStack - Slots.Quantity;
+			const int32 Espaco = ItemInfo->MaxStack - Slots.Quantity;
 			if (Espaco > 0)
 			{
 				const int32 Add = FMath::Min(Espaco, Quantity);
 				Slots.Quantity += Add;
 				Quantity -= Add;
 
-				if (Quantity <= 0 && ItemSlot.Num() <= InventorySize) return 0;
+				if (Quantity <= 0 && ItemSlots.Num() <= InventorySize) return 0;
 			}
 		}
 	}
 
-	if (Quantity > 0 && ItemSlot.Num() < InventorySize)
-			return NewStack(ItemData, Quantity);
+	if (Quantity > 0 && ItemSlots.Num() < InventorySize)
+			return NewStack(ItemInfo, Quantity);
 	
 	return Quantity;
 	
 }
 
-int UInventoryComponent::NewStack(FItem ItemData, int32 Quantity)
+int UInventoryComponent::NewStack(UPDA_Master* ItemData, int32 Quantity)
 {
 
-	while (Quantity > 0 && ItemSlot.Num() < InventorySize)
+	while (Quantity > 0 && ItemSlots.Num() < InventorySize)
 	{
 		{
-			const int32 Add = FMath::Min(Quantity, ItemData.MaxStack);
+			const int32 Add = FMath::Min(Quantity, ItemData->MaxStack);
 			FItemSlot NewSlot;
 			NewSlot.Item = ItemData;
 			NewSlot.Quantity = Add;
-			ItemSlot.Add(NewSlot);
+			ItemSlots.Add(NewSlot);
 			Quantity -= Add;
 		}
 	}
 	
-	if (ItemSlot.Num() >= InventorySize)
+	if (ItemSlots.Num() >= InventorySize)
 			return Quantity;
 		
-	if (Quantity <= 0 && ItemSlot.Num() <= InventorySize)
+	if (Quantity <= 0 && ItemSlots.Num() <= InventorySize)
 		return 0;
 	
 	return Quantity;
 }
 
-void UInventoryComponent::DropItem(FItem ItemData, int32 Quantity)
+void UInventoryComponent::DropItem(UPDA_Master* ItemData, int32 Quantity)
 {
 	
 }
@@ -95,7 +96,7 @@ void UInventoryComponent::SearchItem()
 
 void UInventoryComponent::ClearInventory()
 {
-	ItemSlot.Empty();
+	ItemSlots.Empty();
 }
 
 void UInventoryComponent::BeginPlay()
