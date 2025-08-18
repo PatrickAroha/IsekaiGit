@@ -12,7 +12,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "VectorUtil.h"
+#include "Blueprint/UserWidget.h"
 #include "Isekai/Inventory/PDA_Master.h"
+#include "Isekai/Inventory/Widget/Inventory.h"
 #include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -179,14 +181,16 @@ void AIsekaiCharacter::OpenInventory()
 {
 	if (!InventoryComponent) return;
 
-	UE_LOG(LogTemp, Log, TEXT("------------------------------------------"));
+	if (Inventory)
+		Inventory->RemoveFromParent();
+	else
+		Inventory =	CreateWidget<UInventory>(GetWorld(), UInventory::StaticClass());
 
-	int32 i = 0;
-
-	for (const FItemSlot& S : InventoryComponent->ItemSlots)
+	/*for (const FItemSlot& S : InventoryComponent->ItemSlots)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[INV] slot: %d x%d"), S.Item->ID, S.Quantity);
 	}
+	*/
 }
 
 void AIsekaiCharacter::ClearInventory()

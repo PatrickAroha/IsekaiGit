@@ -8,12 +8,14 @@
 #include "Isekai/Interfaces/InteractInterface.h"
 #include "IsekaiCharacter.generated.h"
 
+
 class UInventoryComponent;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 class AActor;
+class UInventory;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -55,7 +57,11 @@ class AIsekaiCharacter : public ACharacter
 
 	UPROPERTY(VisibleAnywhere, Category = "AimActor")
 	AActor* CurrentTarget = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Widget")
+	UInventory* Inventory;
 	
+
 public:
 	
 	AIsekaiCharacter();
