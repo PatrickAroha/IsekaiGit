@@ -31,11 +31,11 @@ void ABaseItem::Interact_Implementation(AActor* Player)
 	{
 		if (int32 StackQuantity = Inv->AddItem(ItemInfo, Quantity); StackQuantity <= 0)
 		{
-		Destroy();
+			Destroy();
 		}
 		else
 		{
-		Quantity = StackQuantity;
+			Quantity = StackQuantity;
 		}
 	}
 }

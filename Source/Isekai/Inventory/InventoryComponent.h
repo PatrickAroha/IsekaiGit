@@ -33,15 +33,15 @@ public:
 
 	int NewStack(UPDA_Master* ItemData, int32 Quantity);
 
-	void DropItem(UPDA_Master* ItemData, int32 Quantity);
+	UFUNCTION(BlueprintCallable)
+	void DropItem(int32 Index, int32 Quantity);
 
-	void RemoveItem(int32 Index, int32 Quantity);
-
-	void SearchItem();
+	void SearchItem(UPDA_Master* ItemInfo);
 
 	void ClearInventory();
 
-	void UpdateSlot(USlotInventory* LastSlot, USlotInventory* NewSlot);
+	UFUNCTION(BlueprintCallable)
+	void UpdateSlot(int32 CurrentIndex, int32 Quantity, int32 NewIndex);
 	
 protected:
 

@@ -39,6 +39,7 @@ public:
 protected:
 	virtual bool Initialize() override;
 
+	UFUNCTION(BlueprintCallable)
 	void FillSlots();
 	
 public:

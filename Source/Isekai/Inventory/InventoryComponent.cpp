@@ -3,6 +3,7 @@
 
 #include "InventoryComponent.h"
 #include "PDA_Master.h"
+#include "VisualizeTexture.h"
 #include "Itens/BaseItem.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -16,27 +17,35 @@ int UInventoryComponent::AddItem(UPDA_Master* ItemInfo, int32 Quantity)
 	if (ItemInfo->bStackable)
 		return AddStack(ItemInfo, Quantity);
 
-	if (ItemSlots.Num() < InventorySize)
+	for (int32 i = 0; i < InventorySize; i++)
 	{
-		AddUnique(ItemInfo, 1);
-		return 0;
+		if (ItemSlots[i].Item == nullptr)
+		{
+			AddUnique(ItemInfo, 1);
+			return 0;
+		}
 	}
 	return Quantity;
 }
 
 void UInventoryComponent::AddUnique(UPDA_Master* ItemInfo, int32 Quantity)
 {
-	FItemSlot NewSlot;
-	NewSlot.Item = ItemInfo;
-	NewSlot.Quantity = Quantity;
-	ItemSlots.Add(NewSlot);
+	for (FItemSlot& Slots : ItemSlots)
+	{
+		if (Slots.Item == nullptr)
+		{
+			Slots.Item = ItemInfo;
+			Slots.Quantity = Quantity;
+			return;
+		}
+	}
 }
 
 int UInventoryComponent::AddStack(UPDA_Master* ItemInfo, int32 Quantity) 
 {
 	for (FItemSlot& Slots : ItemSlots)
 	{
-		if (Slots.Item->ID == ItemInfo->ID)
+		if (Slots.Item != nullptr && Slots.Item->ID == ItemInfo->ID)
 		{
 			const int32 Espaco = ItemInfo->MaxStack - Slots.Quantity;
 			if (Espaco > 0)
@@ -45,13 +54,16 @@ int UInventoryComponent::AddStack(UPDA_Master* ItemInfo, int32 Quantity)
 				Slots.Quantity += Add;
 				Quantity -= Add;
 
-				if (Quantity <= 0 && ItemSlots.Num() <= InventorySize) return 0;
+				if (Quantity <= 0) return 0;
 			}
 		}
 	}
 
-	if (Quantity > 0 && ItemSlots.Num() < InventorySize)
+	for (int32 i = 0; i < InventorySize; i++)
+	{
+		if (Quantity > 0 && ItemSlots[i].Item == nullptr)
 			return NewStack(ItemInfo, Quantity);
+	}
 	
 	return Quantity;
 	
@@ -59,34 +71,22 @@ int UInventoryComponent::AddStack(UPDA_Master* ItemInfo, int32 Quantity)
 
 int UInventoryComponent::NewStack(UPDA_Master* ItemData, int32 Quantity)
 {
-
-	while (Quantity > 0 && ItemSlots.Num() < InventorySize)
+	for (FItemSlot& Slot : ItemSlots)
 	{
+		if (Slot.Item == nullptr && Quantity > 0)
 		{
 			const int32 Add = FMath::Min(Quantity, ItemData->MaxStack);
-			FItemSlot NewSlot;
-			NewSlot.Item = ItemData;
-			NewSlot.Quantity = Add;
-			ItemSlots.Add(NewSlot);
+			Slot.Item = ItemData;
+			Slot.Quantity = Add;
 			Quantity -= Add;
+
+			if (Quantity <= 0) return 0;
 		}
 	}
-	
-	if (ItemSlots.Num() >= InventorySize)
-			return Quantity;
-		
-	if (Quantity <= 0 && ItemSlots.Num() <= InventorySize)
-		return 0;
-	
 	return Quantity;
 }
 
-void UInventoryComponent::DropItem(UPDA_Master* ItemData, int32 Quantity)
-{
-	
-}
-
-void UInventoryComponent::RemoveItem(int32 Index, int32 Quantity)
+void UInventoryComponent::DropItem(int32 Index, int32 Quantity)
 {
 	if (ItemSlots.IsValidIndex(Index))
 	{
@@ -113,33 +113,59 @@ void UInventoryComponent::RemoveItem(int32 Index, int32 Quantity)
 			}
 		}
 		if (Slot.Quantity - Quantity <= 0)
-			ItemSlots.RemoveAt(Index);
+		{
+			ItemSlots[Index].Item = nullptr;
+			ItemSlots[Index].Quantity = 0;
+		}
 		else
 			Slot.Quantity -= Quantity;
 	}
 }
 
-void UInventoryComponent::SearchItem()
+void UInventoryComponent::SearchItem(UPDA_Master* ItemInfo)
 {
+	for (FItemSlot& Slots : ItemSlots)
+	{
+		if (Slots.Item->ID == ItemInfo->ID)
+		{
+
+		}
+	}
 	
 }
 
-void UInventoryComponent::UpdateSlot(USlotInventory* LastSlot, USlotInventory* NewSlot)
+void UInventoryComponent::UpdateSlot(int32 Index, int32 Quantity, int32 NewIndex)
 {
-	NewSlot->ItemInfo = LastSlot->ItemInfo;
-	NewSlot->Quantity = LastSlot->Quantity;
-	LastSlot->ItemInfo = nullptr;
-	LastSlot->Quantity = 0;
+	if (ItemSlots.IsValidIndex(Index) && ItemSlots.IsValidIndex(NewIndex) && ItemSlots[NewIndex].Item == nullptr)
+	{
+		
+		FItemSlot& From = ItemSlots[Index];
+		FItemSlot& To   = ItemSlots[NewIndex];
+		
+		To = From;
+		From.Item = nullptr;
+		From.Quantity = 0;
+	}
 }
 
 void UInventoryComponent::ClearInventory()
 {
-	ItemSlots.Empty();
+	for (int32 i = 0 ; i < InventorySize; i++)
+	{
+		ItemSlots[i].Item = nullptr;
+		ItemSlots[i].Quantity = 0;
+	}
+	
 }
 
 void UInventoryComponent::BeginPlay()
 {
-	Super::BeginPlay();
+	ItemSlots.SetNum(InventorySize);
+	for (int32 i = 0; i < InventorySize; i++)
+	{
+		ItemSlots[i].Item = nullptr;
+		ItemSlots[i].Quantity = 0;
+	}
 }
 
 

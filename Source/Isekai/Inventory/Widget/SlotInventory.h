@@ -17,7 +17,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 SlotIndex;
 
-	UPROPERTY(meta=(BindWidget), EditAnywhere)
+	UPROPERTY(meta=(BindWidget), EditAnywhere, BlueprintReadOnly)
 	UTextBlock* SlotIndexText;
 
 	UPROPERTY(meta=(BindWidget), BlueprintReadOnly)

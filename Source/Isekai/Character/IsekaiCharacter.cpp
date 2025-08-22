@@ -204,7 +204,8 @@ void AIsekaiCharacter::OpenInventory()
 
 	for (const FItemSlot& S : InventoryComponent->ItemSlots)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[INV] slot: %d x%d"), S.Item->ID, S.Quantity);
+		if (S.Item)
+			UE_LOG(LogTemp, Warning, TEXT("[INV] slot: %d x%d"), S.Item->ID, S.Quantity);
 	}
 	
 }

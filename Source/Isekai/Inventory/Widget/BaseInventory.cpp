@@ -61,7 +61,7 @@ void UBaseInventory::FillSlots()
 	{
 		for (int32 i = 0; i < Slots.Num(); i++)
 		{
-			if (Slots[i] && ItemSlots.IsValidIndex(i))
+			if (Slots[i] && ItemSlots.IsValidIndex(i) && ItemSlots[i].Item && ItemSlots[i].Quantity > 0)
 			{
 				UTexture2D* IconTexture = ItemSlots[i].Item->Icon;
 
