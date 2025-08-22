@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Components/Image.h"
 #include "Blueprint/UserWidget.h"
+#include "BaseInventory.h"
 #include "Components/TextBlock.h"
 #include "SlotInventory.generated.h"
 
@@ -31,4 +32,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemData")
 	int32 Quantity;
+
+	UPROPERTY(BlueprintReadWrite, meta=(ExposeOnSpawn = true))
+	UBaseInventory* OwnerInventory = nullptr;
 };

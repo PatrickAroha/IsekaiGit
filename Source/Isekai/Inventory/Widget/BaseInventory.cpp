@@ -36,6 +36,7 @@ void UBaseInventory::GenerateInventory()
 		{
 			Slots.Add(NewSlot);
 			NewSlot->SlotIndex = i;
+			NewSlot->OwnerInventory = this;
 			
 			if (UGridSlot* GridSlot = InventoryGrid->AddChildToGrid(NewSlot))
 			{

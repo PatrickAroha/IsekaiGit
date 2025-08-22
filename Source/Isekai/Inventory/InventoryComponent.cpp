@@ -136,7 +136,7 @@ void UInventoryComponent::SearchItem(UPDA_Master* ItemInfo)
 
 void UInventoryComponent::UpdateSlot(int32 Index, int32 Quantity, int32 NewIndex)
 {
-	if (ItemSlots.IsValidIndex(Index) && ItemSlots.IsValidIndex(NewIndex) && ItemSlots[NewIndex].Item == nullptr)
+	if (ItemSlots.IsValidIndex(Index) && ItemSlots.IsValidIndex(NewIndex) && ItemSlots[NewIndex].Item == nullptr && ItemSlots[NewIndex].Quantity <= 0)
 	{
 		
 		FItemSlot& From = ItemSlots[Index];
