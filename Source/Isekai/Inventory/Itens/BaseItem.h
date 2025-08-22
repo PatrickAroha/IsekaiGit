@@ -15,10 +15,10 @@ class ISEKAI_API ABaseItem : public AActor, public IInteractInterface
 
 public:
 
-	UPROPERTY(EditAnywhere, Category = "Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item", meta=(ExposeOnSpawn=true))
 	TObjectPtr<UPDA_Master> ItemInfo;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item", meta=(ExposeOnSpawn=true))
 	int32 Quantity;
 
 #if WITH_EDITOR

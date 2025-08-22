@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ItemStructure.h"
+#include "Isekai/Inventory/Widget/SlotInventory.h"
 #include "Components/ActorComponent.h"
 #include "InventoryComponent.generated.h"
 
@@ -34,11 +35,13 @@ public:
 
 	void DropItem(UPDA_Master* ItemData, int32 Quantity);
 
-	void RemoveItem();
+	void RemoveItem(int32 Index, int32 Quantity);
 
 	void SearchItem();
 
 	void ClearInventory();
+
+	void UpdateSlot(USlotInventory* LastSlot, USlotInventory* NewSlot);
 	
 protected:
 

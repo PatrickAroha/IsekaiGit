@@ -14,7 +14,6 @@
 #include "VectorUtil.h"
 #include "Blueprint/UserWidget.h"
 #include "Isekai/Inventory/PDA_Master.h"
-#include "Isekai/Inventory/Widget/Inventory.h"
 #include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -174,23 +173,40 @@ void AIsekaiCharacter::Interact()
 	if (CurrentTarget != nullptr)
 	{
 		TargetInteractable->Execute_Interact(CurrentTarget, this);
+		if (Inventory)
+			Inventory->InitItems(InventoryComponent->ItemSlots);
 	}
 }
 
 void AIsekaiCharacter::OpenInventory()
 {
-	if (!InventoryComponent) return;
-
+	
 	if (Inventory)
+	{
 		Inventory->RemoveFromParent();
-	else
-		Inventory =	CreateWidget<UInventory>(GetWorld(), UInventory::StaticClass());
+		Inventory = nullptr;
+		return;
+	}
 
-	/*for (const FItemSlot& S : InventoryComponent->ItemSlots)
+	if (InventoryClass)
+	{
+		Inventory = CreateWidget<UBaseInventory>(GetWorld(), InventoryClass);
+		if (Inventory)
+		{
+			if (InventoryComponent)
+			{
+				Inventory->InitItems(InventoryComponent->ItemSlots);
+			}
+
+			Inventory->AddToViewport();
+		}
+	}
+
+	for (const FItemSlot& S : InventoryComponent->ItemSlots)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[INV] slot: %d x%d"), S.Item->ID, S.Quantity);
 	}
-	*/
+	
 }
 
 void AIsekaiCharacter::ClearInventory()

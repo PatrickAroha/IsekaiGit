@@ -3,6 +3,8 @@
 
 #include "InventoryComponent.h"
 #include "PDA_Master.h"
+#include "Itens/BaseItem.h"
+#include "Kismet/GameplayStatics.h"
 
 UInventoryComponent::UInventoryComponent()
 {
@@ -84,14 +86,50 @@ void UInventoryComponent::DropItem(UPDA_Master* ItemData, int32 Quantity)
 	
 }
 
-void UInventoryComponent::RemoveItem()
+void UInventoryComponent::RemoveItem(int32 Index, int32 Quantity)
 {
-	
+	if (ItemSlots.IsValidIndex(Index))
+	{
+		
+		FItemSlot& Slot = ItemSlots[Index];
+
+		if (Slot.Item)
+		{
+			AActor* Owner = GetOwner();
+			if (Owner && Owner->GetWorld() && Slot.Item)
+			{
+
+				FVector SpawnLocation = Owner->GetActorLocation() + Owner->GetActorForwardVector() * 100.f;
+				FTransform SpawnTransform(Owner->GetActorRotation(), SpawnLocation);
+				
+				ABaseItem* Spawned = Owner->GetWorld()->SpawnActorDeferred<ABaseItem>(ABaseItem::StaticClass(), SpawnTransform);
+
+				if (Spawned)
+				{
+					Spawned->ItemInfo = Slot.Item;
+					Spawned->Quantity = Quantity;
+					UGameplayStatics::FinishSpawningActor(Spawned, SpawnTransform);
+				}
+			}
+		}
+		if (Slot.Quantity - Quantity <= 0)
+			ItemSlots.RemoveAt(Index);
+		else
+			Slot.Quantity -= Quantity;
+	}
 }
 
 void UInventoryComponent::SearchItem()
 {
 	
+}
+
+void UInventoryComponent::UpdateSlot(USlotInventory* LastSlot, USlotInventory* NewSlot)
+{
+	NewSlot->ItemInfo = LastSlot->ItemInfo;
+	NewSlot->Quantity = LastSlot->Quantity;
+	LastSlot->ItemInfo = nullptr;
+	LastSlot->Quantity = 0;
 }
 
 void UInventoryComponent::ClearInventory()

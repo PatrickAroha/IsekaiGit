@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "Isekai/Interfaces/InteractInterface.h"
+#include "Isekai/Inventory/Widget/BaseInventory.h"
 #include "IsekaiCharacter.generated.h"
 
 
@@ -15,7 +16,6 @@ class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 class AActor;
-class UInventory;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -58,16 +58,18 @@ class AIsekaiCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, Category = "AimActor")
 	AActor* CurrentTarget = nullptr;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Widget")
-	UInventory* Inventory;
-	
-
 public:
 	
-	AIsekaiCharacter();
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UBaseInventory> InventoryClass;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Widget")
+	TObjectPtr<UBaseInventory> Inventory = nullptr;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UInventoryComponent* InventoryComponent;
+	
+	AIsekaiCharacter();
 
 protected:
 

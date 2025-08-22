@@ -87,7 +87,7 @@ public:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Stack")
     bool bStackable = true;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Stack", meta=(ClampMin="1", EditCondition="bStackable"))
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Stack", meta=(ClampMin="1", EditCondition="bStackable", EditConditionHides))
     int32 MaxStack = 5;
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Visual")
