@@ -180,32 +180,37 @@ void AIsekaiCharacter::Interact()
 
 void AIsekaiCharacter::OpenInventory()
 {
-	
-	if (Inventory)
+	if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
 	{
-		Inventory->RemoveFromParent();
-		Inventory = nullptr;
-		return;
-	}
 
-	if (InventoryClass)
-	{
-		Inventory = CreateWidget<UBaseInventory>(GetWorld(), InventoryClass);
+		if (InventoryClass == nullptr) return;
+		
 		if (Inventory)
 		{
+			FInputModeGameOnly InputMode;
+			Inventory->RemoveFromParent();
+			Inventory = nullptr;
+			PC->SetInputMode(InputMode);
+			PC->bShowMouseCursor = false;
+		}
+		else
+		{
+	
 			if (InventoryComponent)
 			{
+				Inventory = CreateWidget<UBaseInventory>(GetWorld(), InventoryClass);
 				Inventory->InitItems(InventoryComponent->ItemSlots);
+				
+				FInputModeGameAndUI InputMode;
+				Inventory->SetFocus();
+				InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+				
+				PC->SetInputMode(InputMode);
+				PC->bShowMouseCursor = true;
 			}
 
-			Inventory->AddToViewport();
+				Inventory->AddToViewport();
 		}
-	}
-
-	for (const FItemSlot& S : InventoryComponent->ItemSlots)
-	{
-		if (S.Item)
-			UE_LOG(LogTemp, Warning, TEXT("[INV] slot: %d x%d"), S.Item->ID, S.Quantity);
 	}
 	
 }

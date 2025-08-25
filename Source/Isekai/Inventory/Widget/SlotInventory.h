@@ -24,7 +24,7 @@ public:
 	UPROPERTY(meta=(BindWidget), BlueprintReadOnly)
 	UImage* ItemIcon;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UTexture2D* ItemIconTexture;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemData")
@@ -35,4 +35,5 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta=(ExposeOnSpawn = true))
 	UBaseInventory* OwnerInventory = nullptr;
+	
 };

@@ -25,6 +25,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int32 InventorySize = 6;
 	
+	
 	int32 AddItem(UPDA_Master* ItemData, int32 Quantity);
 
 	int AddStack(UPDA_Master* ItemData, int32 Quantity);

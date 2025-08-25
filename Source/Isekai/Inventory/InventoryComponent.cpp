@@ -4,6 +4,7 @@
 #include "InventoryComponent.h"
 #include "PDA_Master.h"
 #include "VisualizeTexture.h"
+#include "Isekai/Character/IsekaiCharacter.h"
 #include "Itens/BaseItem.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -147,6 +148,7 @@ void UInventoryComponent::UpdateSlot(int32 Index, int32 Quantity, int32 NewIndex
 		From.Quantity = 0;
 	}
 }
+
 
 void UInventoryComponent::ClearInventory()
 {

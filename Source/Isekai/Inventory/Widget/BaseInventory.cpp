@@ -62,17 +62,28 @@ void UBaseInventory::FillSlots()
 	{
 		for (int32 i = 0; i < Slots.Num(); i++)
 		{
-			if (Slots[i] && ItemSlots.IsValidIndex(i) && ItemSlots[i].Item && ItemSlots[i].Quantity > 0)
+			if (Slots[i])
 			{
-				UTexture2D* IconTexture = ItemSlots[i].Item->Icon;
-
-				if (IconTexture && Slots[i]->ItemIcon)
+				if (ItemSlots.IsValidIndex(i) && ItemSlots[i].Item && ItemSlots[i].Quantity > 0)
 				{
-					Slots[i]->ItemIconTexture = IconTexture;
-					Slots[i]->ItemIcon->SetBrushFromTexture(IconTexture);
-					Slots[i]->SlotIndexText->SetText(FText::AsNumber(ItemSlots[i].Quantity));
-					Slots[i]->Quantity = ItemSlots[i].Quantity;
-					Slots[i]->ItemInfo = ItemSlots[i].Item;
+					UTexture2D* IconTexture = ItemSlots[i].Item->Icon;
+
+					if (IconTexture && Slots[i]->ItemIcon)
+					{
+						Slots[i]->ItemIconTexture = IconTexture;
+						Slots[i]->ItemIcon->SetBrushFromTexture(IconTexture);
+						Slots[i]->SlotIndexText->SetText(FText::AsNumber(ItemSlots[i].Quantity));
+						Slots[i]->Quantity = ItemSlots[i].Quantity;
+						Slots[i]->ItemInfo = ItemSlots[i].Item;
+					}
+				}
+				else
+				{
+					Slots[i]->ItemIconTexture = nullptr;
+					Slots[i]->ItemIcon->SetBrushFromTexture(nullptr);
+					Slots[i]->SlotIndexText->SetText(FText::GetEmpty());
+					Slots[i]->Quantity = 0;
+					Slots[i]->ItemInfo = nullptr;
 				}
 			}
 		}

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "Isekai/Inventory/ItemStructure.h"
 #include "InteractInterface.generated.h"
 
 // This class does not need to be modified.
@@ -29,4 +30,5 @@ public:
 	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void EndFocus();
+	
 };
