@@ -8,6 +8,6 @@ public class Isekai : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "UMG", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "UMG", "Slate", "SlateCore", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
 	}
 }
