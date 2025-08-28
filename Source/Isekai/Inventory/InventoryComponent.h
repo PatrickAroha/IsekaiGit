@@ -39,10 +39,13 @@ public:
 
 	void SearchItem(UPDA_Master* ItemInfo);
 
+	UFUNCTION(BlueprintCallable)
+	void ClearSlot(int32 Index);
+	
 	void ClearInventory();
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateSlot(int32 CurrentIndex, int32 Quantity, int32 NewIndex);
+	void UpdateSlot(FItemSlot GetItemSlot, int32 NewIndex);
 	
 protected:
 

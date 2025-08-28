@@ -2,6 +2,7 @@
 #include "PDA_Master.h"
 #include "VisualizeTexture.h"
 #include "Isekai/Character/IsekaiCharacter.h"
+#include "Isekai/FunctionLibrary/DragToggle.h"
 #include "Itens/BaseItem.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -126,26 +127,26 @@ void UInventoryComponent::SearchItem(UPDA_Master* ItemInfo)
 	{
 		if (Slots.Item->ID == ItemInfo->ID)
 		{
-
+			
 		}
 	}
 	
 }
 
-void UInventoryComponent::UpdateSlot(int32 Index, int32 Quantity, int32 NewIndex)
+void UInventoryComponent::UpdateSlot(FItemSlot GetItemSlot, int32 NewIndex)
 {
-	if (ItemSlots.IsValidIndex(Index) && ItemSlots.IsValidIndex(NewIndex) && ItemSlots[NewIndex].Item == nullptr && ItemSlots[NewIndex].Quantity <= 0)
+	if (GetItemSlot.Quantity > 0 && ItemSlots.IsValidIndex(NewIndex))
 	{
-		
-		FItemSlot& From = ItemSlots[Index];
-		FItemSlot& To   = ItemSlots[NewIndex];
-		
-		To = From;
-		From.Item = nullptr;
-		From.Quantity = 0;
+		ItemSlots[NewIndex] = GetItemSlot;
+
 	}
 }
 
+void UInventoryComponent::ClearSlot(int32 Index)
+{
+	ItemSlots[Index].Item = nullptr;
+	ItemSlots[Index].Quantity = 0;
+}
 
 void UInventoryComponent::ClearInventory()
 {
