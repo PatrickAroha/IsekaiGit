@@ -150,45 +150,25 @@ void UInventoryComponent::UpdateSlotRightClick(FItemSlot GetItemSlot, int32 NewI
 
 int32 UInventoryComponent::UpdateSlotLeftClick(FItemSlot GetItemSlot, int32 NewIndex, UInventoryComponent* InventoryComponent)
 {
-	// validações
-	if (GetItemSlot.Quantity <= 0 || !InventoryComponent->ItemSlots.IsValidIndex(NewIndex))
-		return 0;
-
-	// slot de destino
-	FItemSlot& DestSlot = InventoryComponent->ItemSlots[NewIndex];
-
-	// 1. Se o destino já tem alguma coisa
-	if (DestSlot.Quantity > 0)
+	if (GetItemSlot.Quantity > 0 && InventoryComponent->ItemSlots.IsValidIndex(NewIndex))
 	{
-		// 1a. Mesmo item → tenta empilhar
-		if (DestSlot.Item == GetItemSlot.Item)
+		if (InventoryComponent->ItemSlots[NewIndex].Quantity > 0)
 		{
-			const int32 Espaco = GetItemSlot.Item->MaxStack - DestSlot.Quantity; // espaço no destino
-			if (Espaco > 0)
+			if (GetItemSlot.Item == InventoryComponent->ItemSlots[NewIndex].Item)
 			{
-				const int32 Add = FMath::Min(Espaco, GetItemSlot.Quantity);
-
-				DestSlot.Quantity += Add;          // adiciona no destino
-				GetItemSlot.Quantity -= Add;       // tira do arrastado
-
-				// se esgotou o arrastado → retorno final
-				if (GetItemSlot.Quantity <= 0)
+				const int32 Espaco = ItemSlots[NewIndex].Item->MaxStack -  ItemSlots[NewIndex].Quantity;
+				if (Espaco > 0)
 				{
-					return DestSlot.Quantity;
+					const int32 Add = FMath::Min(Espaco, GetItemSlot.Quantity);
+					InventoryComponent->ItemSlots[NewIndex].Quantity += Add;
+					if (Add + GetItemSlot.Quantity >= InventoryComponent->ItemSlots[NewIndex].Item->MaxStack)
+						return (GetItemSlot.Quantity - Add);
 				}
 			}
 		}
-
-		// 1b. Se não for o mesmo item ou ainda sobrou do arrastado → substitui
-		DestSlot = GetItemSlot;
 	}
-	else
-	{
-		// 2. Se o destino estava vazio → só move
-		DestSlot = GetItemSlot;
-	}
-
-	return DestSlot.Quantity;
+	InventoryComponent->ItemSlots[NewIndex] = GetItemSlot;
+	return (GetItemSlot.Quantity - ItemSlots[NewIndex].Quantity); 
 }
 
 void UInventoryComponent::ClearSlot(int32 Index)

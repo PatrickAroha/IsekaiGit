@@ -38,7 +38,12 @@ void UDragToggle::DragToggleDrop(FKey MouseEvent, int32 NewIndex, UInventoryComp
 				{
 					if (MouseEvent == EKeys::LeftMouseButton)
 					{
-						GetInventoryComponent->UpdateSlotLeftClick(ItemSlot, NewIndex, NewInventoryComponent);
+						int32 DragQuantity = GetInventoryComponent->UpdateSlotLeftClick(ItemSlot, NewIndex, NewInventoryComponent);
+						if (DragQuantity <= 0) DragToggleCancel();
+						ItemSlot.Quantity = DragQuantity;
+						DragToggleUpdateWidgetLocation();
+						return;
+					//	DragToggleCancel();
 					}
 					if (MouseEvent == EKeys::RightMouseButton)
 					{
@@ -47,6 +52,10 @@ void UDragToggle::DragToggleDrop(FKey MouseEvent, int32 NewIndex, UInventoryComp
 				}
 			}
 		}
+	}
+	else
+	{
+		DragWidget = CreateWidget(UUserWidget* )
 	}
 }
 
@@ -65,8 +74,12 @@ void UDragToggle::DragToggleCancel()
 void UDragToggle::DragToggleUpdateWidgetValues(int32 CurrentDragQuantity)
 {
 	if (!DragWidget) return;
-	if (CurrentDragQuantity <= 1)
+	if (CurrentDragQuantity <= 0)
+	{
 		DragToggleCancel();
+		return;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("%d"), CurrentDragQuantity);
 }
 
 bool UDragToggle::DragToggleIsActive()
