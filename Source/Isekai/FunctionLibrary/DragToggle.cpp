@@ -1,38 +1,53 @@
+#include "DragToggle.h"
 #include "GetWidgetMouseClick.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "GetWidgetMouseClick.h"
-#include "DragToggle.h"
+
 #include "Blueprint/UserWidget.h"
 
-void UDragToggle::DragToggleStart(UUserWidget* InWidget, FItemSlot GetItemSlot, int32 GetLastIndex)
+void UDragToggle::DragToggleStart(UUserWidget* InWidget, FItemSlot GetItemSlot, int32 GetLastIndex, UInventoryComponent* InventoryComponent)
 {
 	if (!InWidget) return;
+	if (GetItemSlot.Quantity <= 0)
+	{
+		DragToggleCancel();
+		return;
+	}
 	
 	DragWidget = InWidget;
 	ItemSlot = GetItemSlot;
 	LastIndex = GetLastIndex;
+	GetInventoryComponent = InventoryComponent;
+	DragToggleUpdateWidgetLocation();
 }
 
-bool UDragToggle::DragToggleDrop()
+void UDragToggle::DragToggleDrop(FKey MouseEvent, int32 NewIndex, UInventoryComponent* NewInventoryComponent)
 {
 	if (DragToggleIsActive())
 	{
 		if (APlayerController* PC = GetLocalPlayer()->GetPlayerController(GetWorld()))
 		{
 			bool bIsSlotInventory = false;
-			
+	
 			if(UWidget* HitWidget = UGetWidgetMouseClick::GetWidgetUnderCursor(PC, bIsSlotInventory))
 			{
-				if (HitWidget->GetName() == "W_SlotInventory")
+				
+			//	if (HitWidget->GetName() == "W_SlotInventory")
 				{
-					
+					if (MouseEvent == EKeys::LeftMouseButton)
+					{
+						GetInventoryComponent->UpdateSlotLeftClick(ItemSlot, NewIndex, NewInventoryComponent);
+					}
+					if (MouseEvent == EKeys::RightMouseButton)
+					{
+						UE_LOG(LogTemp, Log, TEXT("Clique DIREITO detectado"));
+					}
 				}
 			}
 		}
 	}
-	return true;
 }
 
 void UDragToggle::DragToggleCancel()
@@ -46,6 +61,14 @@ void UDragToggle::DragToggleCancel()
 	} 
 }
 
+
+void UDragToggle::DragToggleUpdateWidgetValues(int32 CurrentDragQuantity)
+{
+	if (!DragWidget) return;
+	if (CurrentDragQuantity <= 1)
+		DragToggleCancel();
+}
+
 bool UDragToggle::DragToggleIsActive()
 {
 	if (!DragWidget) return false;
@@ -57,15 +80,20 @@ bool UDragToggle::DragToggleIsActive()
 void UDragToggle::DragToggleUpdateWidgetLocation()
 {
 	if (!DragWidget) return;
-
 	if (APlayerController* PC = GetLocalPlayer()->GetPlayerController(GetWorld()))
 	{
 		float MouseX, MouseY;
-		
 		if (PC->GetMousePosition(MouseX, MouseY))
 		{
 			FVector2D MousePos(MouseX, MouseY);
-			DragWidget->SetPositionInViewport(MousePos, false);
+
+			// pega escala de DPI do viewport
+			const float Scale = UWidgetLayoutLibrary::GetViewportScale(this);
+
+			// corrige posição com DPI
+			FVector2D CorrectedPos = MousePos / Scale;
+			
+			DragWidget->SetPositionInViewport(CorrectedPos, false);
 		}
 	}
 }

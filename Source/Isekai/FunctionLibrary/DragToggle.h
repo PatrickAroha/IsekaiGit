@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Isekai/Inventory/InventoryComponent.h"
 #include "Subsystems/LocalPlayerSubsystem.h"
 #include "Isekai/Inventory/ItemStructure.h"
 #include "DragToggle.generated.h"
@@ -12,13 +13,16 @@ class ISEKAI_API UDragToggle : public ULocalPlayerSubsystem, public FTickableGam
 
 public:
 	UFUNCTION(BlueprintCallable, Category="Drag")
-	void DragToggleStart(UUserWidget* InWidget, FItemSlot ItemSlot, int32 LastIndex);
+	void DragToggleStart(UUserWidget* InWidget, FItemSlot ItemSlot, int32 LastIndex, UInventoryComponent* InventoryComponent);
 	
 	UFUNCTION(BlueprintCallable, Category="Drag")
-	bool DragToggleDrop();
+	void DragToggleDrop(FKey MouseEvent, int32 NewIndex, UInventoryComponent* NewInventoryComponent);
 	
 	UFUNCTION(BlueprintCallable, Category="Drag")
 	void DragToggleCancel();
+	
+	UFUNCTION(BlueprintCallable, Category="Drag")
+	void DragToggleUpdateWidgetValues(int32 CurrentDragQuantity);
 
 	UFUNCTION(BlueprintCallable, Category="Drag")
 	bool DragToggleIsActive();
@@ -28,7 +32,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemData")
 	FItemSlot ItemSlot;
-
+	
 	virtual	void Tick(float DeltaTime) override;
 	virtual TStatId GetStatId() const override;
 	virtual bool IsTickable() const override { return true; }
@@ -46,5 +50,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn))
 	UUserWidget* DragWidget;
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta=(ExposeOnSpawn))
+	UInventoryComponent* GetInventoryComponent;
 	
 };

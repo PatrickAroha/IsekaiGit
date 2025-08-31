@@ -45,7 +45,10 @@ public:
 	void ClearInventory();
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateSlot(FItemSlot GetItemSlot, int32 NewIndex);
+	void UpdateSlotRightClick(FItemSlot GetItemSlot, int32 NewIndex);
+
+	UFUNCTION(BlueprintCallable)
+	int32 UpdateSlotLeftClick(FItemSlot GetItemSlot, int32 NewIndex, UInventoryComponent* InventoryComponent);
 	
 protected:
 

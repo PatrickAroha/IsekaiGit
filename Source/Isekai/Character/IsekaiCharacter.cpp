@@ -185,34 +185,25 @@ void AIsekaiCharacter::OpenInventory()
 
 		if (InventoryClass == nullptr) return;
 		
-		if (Inventory)
-		{
-			FInputModeGameOnly InputMode;
-			Inventory->RemoveFromParent();
-			Inventory = nullptr;
-			PC->SetInputMode(InputMode);
-			PC->bShowMouseCursor = false;
-		}
-		else
-		{
-	
 			if (InventoryComponent)
 			{
 				Inventory = CreateWidget<UBaseInventory>(GetWorld(), InventoryClass);
 				Inventory->InitItems(InventoryComponent->ItemSlots);
-				
-				FInputModeGameAndUI InputMode;
-				Inventory->SetFocus();
+				Inventory->InventoryComponent = InventoryComponent;
+
+				FInputModeUIOnly InputMode;
+				InputMode.SetWidgetToFocus(Inventory->TakeWidget());
 				InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-				
+
 				PC->SetInputMode(InputMode);
+				PC->FlushPressedKeys();
 				PC->bShowMouseCursor = true;
-			}
+				
+				FSlateApplication::Get().SetKeyboardFocus(Inventory->TakeWidget(), EFocusCause::SetDirectly);
 
 				Inventory->AddToViewport();
-		}
+			}
 	}
-	
 }
 
 void AIsekaiCharacter::ClearInventory()

@@ -39,6 +39,9 @@ public:
 	//GhostWidgetVar
 	UPROPERTY(EditAnywhere, Category = "UI | Inventory")
 	TSubclassOf<UUserWidget> DragGhostClass;
+
+	UPROPERTY(BlueprintReadOnly, Category = "UI | Inventory", meta = (ExposeOnSpawn))
+	UInventoryComponent* InventoryComponent;
 	
 protected:
 	virtual bool Initialize() override;
