@@ -1,26 +1,57 @@
 #include "DragToggle.h"
+
+#include <rapidjson/internal/meta.h>
+
 #include "GetWidgetMouseClick.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
+#include "Isekai/Inventory/Widget/DragWidget.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "GetWidgetMouseClick.h"
+#include "ToolContextInterfaces.h"
 
 #include "Blueprint/UserWidget.h"
+#include "Isekai/Inventory/PDA_Master.h"
+#include "Isekai/Inventory/Widget/DragWidget.h"
 
-void UDragToggle::DragToggleStart(UUserWidget* InWidget, FItemSlot GetItemSlot, int32 GetLastIndex, UInventoryComponent* InventoryComponent)
+void UDragToggle::DragToggleStart(UDragWidget* GetDragWidget, UInventoryComponent* InventoryComponent, FKey MouseButton)
 {
-	if (!InWidget) return;
-	if (GetItemSlot.Quantity <= 0)
+	
+	if (GetDragWidget->ItemSlot.Quantity <= 0)
 	{
 		DragToggleCancel();
 		return;
 	}
 	
-	DragWidget = InWidget;
-	ItemSlot = GetItemSlot;
-	LastIndex = GetLastIndex;
-	GetInventoryComponent = InventoryComponent;
-	DragToggleUpdateWidgetLocation();
+	if (MouseButton == EKeys::LeftMouseButton)
+	{
+		DragWidget = GetDragWidget;
+		Texture = GetDragWidget->Texture;
+		ItemSlot = GetDragWidget->ItemSlot;
+		LastIndex = GetDragWidget->LastIndex;
+		GetInventoryComponent = InventoryComponent;
+		CreateDragWidget();
+		DragToggleUpdateWidgetLocation();
+		InventoryComponent->ClearSlot(LastIndex);
+	}
+	
+	if (MouseButton == EKeys::RightMouseButton)
+	{
+		DragWidget = GetDragWidget;
+		Texture = GetDragWidget->Texture;
+
+		if (GetDragWidget->ItemSlot.Quantity % 2 == 0)
+			ItemSlot.Quantity = GetDragWidget->ItemSlot.Quantity/2;
+		else
+			ItemSlot.Quantity = (GetDragWidget->ItemSlot.Quantity/2 + 1);
+		
+		ItemSlot.Item = GetDragWidget->ItemSlot.Item;
+		LastIndex = GetDragWidget->LastIndex;
+		GetInventoryComponent = InventoryComponent;
+		CreateDragWidget();
+		DragToggleUpdateWidgetLocation();
+		InventoryComponent->ItemSlots[LastIndex].Quantity = (InventoryComponent->ItemSlots[LastIndex].Quantity/2);
+	}
 }
 
 void UDragToggle::DragToggleDrop(FKey MouseEvent, int32 NewIndex, UInventoryComponent* NewInventoryComponent)
@@ -35,27 +66,38 @@ void UDragToggle::DragToggleDrop(FKey MouseEvent, int32 NewIndex, UInventoryComp
 			{
 				
 			//	if (HitWidget->GetName() == "W_SlotInventory")
+				
 				{
+					
 					if (MouseEvent == EKeys::LeftMouseButton)
 					{
 						int32 DragQuantity = GetInventoryComponent->UpdateSlotLeftClick(ItemSlot, NewIndex, NewInventoryComponent);
-						if (DragQuantity <= 0) DragToggleCancel();
+						
+						if (DragQuantity <= 0) { DragToggleCancel(); return; }
+						
 						ItemSlot.Quantity = DragQuantity;
-						DragToggleUpdateWidgetLocation();
+						
+						if (DragWidget)
+							DragWidget->UpdateWidget(ItemSlot, DragQuantity);
+						
 						return;
-					//	DragToggleCancel();
 					}
+
 					if (MouseEvent == EKeys::RightMouseButton)
 					{
-						UE_LOG(LogTemp, Log, TEXT("Clique DIREITO detectado"));
+						int32 DragQuantity = GetInventoryComponent->UpdateSlotRightClick(ItemSlot, NewIndex, NewInventoryComponent);
+						
+						if (DragQuantity <= 0) { DragToggleCancel(); return; }
+						
+						ItemSlot.Quantity = DragQuantity;
+						
+						if (DragWidget)
+							DragWidget->UpdateWidget(ItemSlot, DragQuantity);
+						
 					}
 				}
 			}
 		}
-	}
-	else
-	{
-		DragWidget = CreateWidget(UUserWidget* )
 	}
 }
 
@@ -69,7 +111,6 @@ void UDragToggle::DragToggleCancel()
 		LastQuantity = 0;
 	} 
 }
-
 
 void UDragToggle::DragToggleUpdateWidgetValues(int32 CurrentDragQuantity)
 {
@@ -88,6 +129,21 @@ bool UDragToggle::DragToggleIsActive()
 	if (ItemSlot.Quantity == 0) return false;
 	
 	return true;
+}
+
+void UDragToggle::CreateDragWidget()
+{
+	if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
+	{
+		if (DragWidget)
+		{
+			DragWidget->LastIndex = LastIndex;
+			DragWidget->ItemSlot = ItemSlot;
+			DragWidget->Texture = Texture;
+			
+			DragWidget->AddToViewport();
+		}
+	}
 }
 
 void UDragToggle::DragToggleUpdateWidgetLocation()
@@ -121,4 +177,3 @@ TStatId UDragToggle::GetStatId() const
 {
 	RETURN_QUICK_DECLARE_CYCLE_STAT(UDragToggle, STATGROUP_Tickables);
 }
-

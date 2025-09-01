@@ -6,6 +6,8 @@
 #include "Isekai/Inventory/ItemStructure.h"
 #include "DragToggle.generated.h"
 
+class UDragWidget;
+
 UCLASS()
 class ISEKAI_API UDragToggle : public ULocalPlayerSubsystem, public FTickableGameObject
 {
@@ -13,7 +15,7 @@ class ISEKAI_API UDragToggle : public ULocalPlayerSubsystem, public FTickableGam
 
 public:
 	UFUNCTION(BlueprintCallable, Category="Drag")
-	void DragToggleStart(UUserWidget* InWidget, FItemSlot ItemSlot, int32 LastIndex, UInventoryComponent* InventoryComponent);
+	void DragToggleStart(UDragWidget* GetDragWidget, UInventoryComponent* InventoryComponent,  FKey MouseButton);
 	
 	UFUNCTION(BlueprintCallable, Category="Drag")
 	void DragToggleDrop(FKey MouseEvent, int32 NewIndex, UInventoryComponent* NewInventoryComponent);
@@ -26,6 +28,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Drag")
 	bool DragToggleIsActive();
+
+	UFUNCTION(BlueprintCallable, Category="Drag")
+	void CreateDragWidget();
 
 	UFUNCTION(BlueprintCallable, Category="Drag")
 	void DragToggleUpdateWidgetLocation();
@@ -49,9 +54,30 @@ public:
 	int32 Index;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn))
-	UUserWidget* DragWidget;
+	UTexture2D* Texture;
 	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn))
+	UDragWidget* DragWidget;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UI")
+	TSubclassOf<UDragWidget> W_DragSlotInventory;
+
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta=(ExposeOnSpawn))
 	UInventoryComponent* GetInventoryComponent;
 	
+};
+
+USTRUCT(BlueprintType)
+struct FDragInfo
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPDA_Master* Item = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Quantity = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UTexture2D> Texture = nullptr;
 };
