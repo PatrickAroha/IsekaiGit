@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -36,5 +34,6 @@ public:
 	virtual int32 UpdateSlotRightClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent);
 
 	UFUNCTION(BlueprintCallable)
-	void ClearSlot(int32 Index);
+	virtual void ClearSlot(int32 Index);
+	
 };

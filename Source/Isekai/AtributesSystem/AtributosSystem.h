@@ -2,21 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "AttributesTypes.h"
 #include "AtributosSystem.generated.h"
 
-UENUM(BlueprintType)
-enum class EAtributeType : uint8
-{
-	Vida,
-	Stamina,
-	Mana,
-	Attack,
-	Power,
-	Defense,
-	Velocity,
-	Jump,
-	Dodge
-};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributesUpdated, UAtributosSystem*, AtribComp);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 
@@ -28,11 +17,9 @@ public:
 	
 	UAtributosSystem();
 	
-protected:
-	
 	void SetValue(EAtributeType Atribute, int32 NewValue);
 	
-	void AddValue(EAtributeType Atribute, int32 Amount);
+	void AddBonusValue(EAtributeType Atribute, int32 Amount);
 	
 	void RemoveValue(EAtributeType Atribute, int32 Amount);
 	
@@ -42,7 +29,9 @@ protected:
 
 public:
 	
-
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnAttributesUpdated OnAttributesUpdated;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AtributesStatus")
 	TMap<EAtributeType, int32> Attributes;
 

@@ -10,18 +10,21 @@ void UAtributosSystem::SetValue(EAtributeType Atribute, int32 NewValue)
 {
 	if (Attributes.Contains(Atribute))
 		Attributes[Atribute] = NewValue;
+	OnAttributesUpdated.Broadcast(this);
 }
 
-void UAtributosSystem::AddValue(EAtributeType Atribute, int32 Amount)
+void UAtributosSystem::AddBonusValue(EAtributeType Atribute, int32 Amount)
 {
 	if (Attributes.Contains(Atribute))
 		Attributes[Atribute] += Amount;
+	OnAttributesUpdated.Broadcast(this);
 }
 
 void UAtributosSystem::RemoveValue(EAtributeType Atribute, int32 Amount)
 {
 	if (Attributes.Contains(Atribute))
 		Attributes[Atribute] = FMath::Max(0, Attributes[Atribute] - Amount);
+	OnAttributesUpdated.Broadcast(this);
 }
 
 int32 UAtributosSystem::GetValue(EAtributeType Atribute) const
@@ -40,4 +43,5 @@ void UAtributosSystem::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
+
 

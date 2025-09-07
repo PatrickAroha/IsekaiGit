@@ -11,7 +11,7 @@ class ISEKAI_API UAtributs : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
+public:     
 	
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* VidaText;
@@ -39,7 +39,8 @@ public:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* DodgeText;
-	
+
+	UFUNCTION()
 	void UpdateAttributes(class UAtributosSystem* Atributes);
 
 	virtual void NativeConstruct() override;

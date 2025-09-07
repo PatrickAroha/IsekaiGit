@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -16,31 +14,28 @@ class ISEKAI_API UEquipmentComponent : public UBaseInventoryComponent
 public:
 
 	UEquipmentComponent();
-
-	// Quantos slots o equipamento vai ter
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Equipment")
 	int32 EquipmentSize = 4;
-
-	// Inicializa os slots vazios
+	
 	virtual void BeginPlay() override;
 
-	// Equipa item num slot específico
 	UFUNCTION(BlueprintCallable, Category="Equipment")
-	bool EquipItem(FItemSlot& ItemSlot, int32 SlotIndex);
-
-	// Remove item do slot
+	void EquipItem(FItemSlot& ItemSlot, int32 SlotIndex);
+	
 	UFUNCTION(BlueprintCallable, Category="Equipment")
 	void UnequipItem(int32 SlotIndex);
 
-	// Verifica se o slot tem item
 	UFUNCTION(BlueprintCallable, Category="Equipment")
 	bool HasItem(int32 SlotIndex) const;
 
-	// Retorna o item no slot
 	UFUNCTION(BlueprintCallable, Category="Equipment")
 	FItemSlot GetItemAt(int32 SlotIndex) const;
 
 	virtual int32 UpdateSlotLeftClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent) override;
 
 	virtual int32 UpdateSlotRightClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent) override;
+
+	virtual void ClearSlot(int32 Index) override;
+	
 };

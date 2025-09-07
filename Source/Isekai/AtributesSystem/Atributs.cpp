@@ -60,7 +60,9 @@ void UAtributs::NativeConstruct()
 		{
 			if (UAtributosSystem* AtribComp = Pawn->FindComponentByClass<UAtributosSystem>())
 			{
-				UpdateAttributes(AtribComp); 
+				UpdateAttributes(AtribComp);
+
+				AtribComp->OnAttributesUpdated.AddDynamic(this, &UAtributs::UpdateAttributes);
 			}
 		}
 	}

@@ -1,9 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "Isekai/AtributesSystem/AttributesTypes.h"
 #include "PDA_Master.generated.h"
 
 UENUM(BlueprintType)
@@ -49,10 +48,11 @@ enum class EPotionType : uint8
     PotionStaminaSmall UMETA(DisplayName = "PotionStaminaSmall"),
     PotionStaminaBig   UMETA(DisplayName = "PotionStaminaBig")
 };
+
 UCLASS()
 class ISEKAI_API UPDA_Master : public UPrimaryDataAsset
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
 
@@ -62,7 +62,7 @@ public:
     {
         return FPrimaryAssetId(PrimaryType, GetFName());
     }
-    
+
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Item")
     int32 ID = 0;
 
@@ -84,15 +84,24 @@ public:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Item|Consumable", meta=(EditCondition="Type==EItemCategory::Consumable"))
     EPotionType PotionType = EPotionType::None;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Stack")
+    // 🔹 NOVO: flag para indicar se pode ser equipado
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Item|Equipment")
+    bool bEquipable = false;
+
+    // 🔹 Stack só editável se NÃO for equipável
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Stack", meta=(EditCondition="!bEquipable"))
     bool bStackable = true;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Stack", meta=(ClampMin="1", EditCondition="bStackable", EditConditionHides))
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Stack", meta=(ClampMin="1", EditCondition="bStackable && !bEquipable", EditConditionHides))
     int32 MaxStack = 5;
-    
+
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Visual")
     UStaticMesh* WorldMesh;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Visual")
     TObjectPtr<UTexture2D> Icon;
+
+    // 🔹 Só mostra atributos se for equipável
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Item|Equipment", meta=(EditCondition="bEquipable"))
+    TMap<EAtributeType, int32> AttributeBonus;
 };

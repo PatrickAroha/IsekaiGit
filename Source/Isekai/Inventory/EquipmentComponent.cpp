@@ -1,4 +1,5 @@
 #include "EquipmentComponent.h"
+#include "Isekai/AtributesSystem/AtributosSystem.h"
 #include "Isekai/Inventory/PDA_Master.h"
 
 UEquipmentComponent::UEquipmentComponent()
@@ -19,26 +20,40 @@ void UEquipmentComponent::BeginPlay()
 	
 }
 
-bool UEquipmentComponent::EquipItem(FItemSlot& ItemSlot, int32 SlotIndex)
+void UEquipmentComponent::EquipItem(FItemSlot& ItemSlot, int32 SlotIndex)
 {
 	if (!IsValid(ItemSlot.Item) || !ItemSlots.IsValidIndex(SlotIndex))
-		return false;
+		return;
 
-	ItemSlots[SlotIndex].Item = ItemSlot.Item;
-	ItemSlots[SlotIndex].Quantity = FMath::Max(1, ItemSlot.Quantity);
-
-	UE_LOG(LogTemp, Log, TEXT("Equipped %s in slot %d"), *ItemSlot.Item->GetName(), SlotIndex);
-	return true;
+	if (AActor* Owner = GetOwner())
+	{
+		if (UAtributosSystem* Atribs = Owner->FindComponentByClass<UAtributosSystem>())
+		{
+			for (const TPair<EAtributeType, int32>& Bonus : ItemSlots[SlotIndex].Item->AttributeBonus)
+			{
+				Atribs->AddBonusValue(Bonus.Key, Bonus.Value);
+			}
+		}
+	}
 }
 
 void UEquipmentComponent::UnequipItem(int32 SlotIndex)
 {
 	if (!ItemSlots.IsValidIndex(SlotIndex)) return;
 
-	ItemSlots[SlotIndex].Item = nullptr;
-	ItemSlots[SlotIndex].Quantity = 0;
-
-	UE_LOG(LogTemp, Log, TEXT("Unequipped item from slot %d"), SlotIndex);
+	if (AActor* Owner = GetOwner())
+	{
+		if (UAtributosSystem* Atribs = Owner->FindComponentByClass<UAtributosSystem>())
+		{
+			if (ItemSlots[SlotIndex].Item && ItemSlots[SlotIndex].Item->AttributeBonus.Num() > 0)
+			{
+				for (const TPair<EAtributeType, int32>& Bonus : ItemSlots[SlotIndex].Item->AttributeBonus)
+				{
+					Atribs->RemoveValue(Bonus.Key, Bonus.Value);
+				}
+			}
+		}
+	}
 }
 
 bool UEquipmentComponent::HasItem(int32 SlotIndex) const
@@ -57,20 +72,41 @@ FItemSlot UEquipmentComponent::GetItemAt(int32 SlotIndex) const
 
 int32 UEquipmentComponent::UpdateSlotLeftClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent)
 {
+	if (!IsValid(GetItemSlot.Item) || !GetItemSlot.Item->bEquipable)
+		return GetItemSlot.Quantity;
+
+	UnequipItem(NewIndex);
 	
 	int32 ParentResult = Super::UpdateSlotLeftClick(GetItemSlot, NewIndex, InventoryComponent);
 
-	EquipItem(GetItemSlot, NewIndex);
+	if (ItemSlots.IsValidIndex(NewIndex) && ItemSlots[NewIndex].Item)
+	{
+		EquipItem(ItemSlots[NewIndex], NewIndex);
+	}
 	
 	return ParentResult;
 }
 
 int32 UEquipmentComponent::UpdateSlotRightClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent)
 {
+	if (!IsValid(GetItemSlot.Item) || !GetItemSlot.Item->bEquipable)
+		return GetItemSlot.Quantity;
 	
+	UnequipItem(NewIndex);
 
 	int32 ParentResult = Super::UpdateSlotRightClick(GetItemSlot, NewIndex, InventoryComponent);
+
+	if (ItemSlots.IsValidIndex(NewIndex) && ItemSlots[NewIndex].Item)
+	{
+		EquipItem(ItemSlots[NewIndex], NewIndex);
+	}
 	
 	return ParentResult;
+}
+
+void UEquipmentComponent::ClearSlot(int32 Index)
+{
+	UnequipItem(Index);
+	Super::ClearSlot(Index);
 }
 

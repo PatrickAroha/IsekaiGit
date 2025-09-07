@@ -19,18 +19,16 @@ void UBaseInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType
 
 int32 UBaseInventoryComponent::UpdateSlotLeftClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent)
 {
-
 	if (GetItemSlot.Quantity > 0 && InventoryComponent->ItemSlots.IsValidIndex(NewIndex))
 	{
 		if (InventoryComponent->ItemSlots[NewIndex].Quantity > 0)
 		{
-			if (GetItemSlot.Item == InventoryComponent->ItemSlots[NewIndex].Item)
+			if (GetItemSlot.Item == InventoryComponent->ItemSlots[NewIndex].Item && InventoryComponent->ItemSlots[NewIndex].Item->bStackable)
 			{
 				const int32 Espaco = InventoryComponent->ItemSlots[NewIndex].Item->MaxStack - ItemSlots[NewIndex].Quantity;
 				
 				if (Espaco > 0)
 				{
-					UE_LOG(LogTemp, Warning, TEXT("PAI executado Left"));
 					const int32 Add = FMath::Min(Espaco, GetItemSlot.Quantity);
 					InventoryComponent->ItemSlots[NewIndex].Quantity += Add;
 					return (GetItemSlot.Quantity - Add);
@@ -51,7 +49,7 @@ int32 UBaseInventoryComponent::UpdateSlotRightClick(FItemSlot& GetItemSlot, int3
 	{
 		if (InventoryComponent->ItemSlots[NewIndex].Quantity > 0)
 		{
-			if (GetItemSlot.Item == InventoryComponent->ItemSlots[NewIndex].Item)
+			if (GetItemSlot.Item == InventoryComponent->ItemSlots[NewIndex].Item && InventoryComponent->ItemSlots[NewIndex].Item->bStackable)
 			{
 				const int32 Espaco = InventoryComponent->ItemSlots[NewIndex].Item->MaxStack - ItemSlots[NewIndex].Quantity;
 				if (Espaco > 0)
@@ -75,3 +73,5 @@ void UBaseInventoryComponent::ClearSlot(int32 Index)
 	ItemSlots[Index].Item = nullptr;
 	ItemSlots[Index].Quantity = 0;
 }
+
+
