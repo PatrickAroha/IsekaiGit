@@ -4,7 +4,7 @@
 
 UBaseInventoryComponent::UBaseInventoryComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 void UBaseInventoryComponent::BeginPlay()
@@ -19,7 +19,7 @@ void UBaseInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType
 
 int32 UBaseInventoryComponent::UpdateSlotLeftClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent)
 {
-	UE_LOG(LogTemp, Warning, TEXT("5"));
+
 	if (GetItemSlot.Quantity > 0 && InventoryComponent->ItemSlots.IsValidIndex(NewIndex))
 	{
 		if (InventoryComponent->ItemSlots[NewIndex].Quantity > 0)
@@ -30,6 +30,7 @@ int32 UBaseInventoryComponent::UpdateSlotLeftClick(FItemSlot& GetItemSlot, int32
 				
 				if (Espaco > 0)
 				{
+					UE_LOG(LogTemp, Warning, TEXT("PAI executado Left"));
 					const int32 Add = FMath::Min(Espaco, GetItemSlot.Quantity);
 					InventoryComponent->ItemSlots[NewIndex].Quantity += Add;
 					return (GetItemSlot.Quantity - Add);

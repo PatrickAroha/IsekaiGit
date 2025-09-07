@@ -13,6 +13,7 @@
 #include "InputActionValue.h"
 #include "VectorUtil.h"
 #include "Blueprint/UserWidget.h"
+#include "Isekai/AtributesSystem/AtributosSystem.h"
 #include "Isekai/Inventory/EquipmentComponent.h"
 #include "Isekai/Inventory/PDA_Master.h"
 #include "Isekai/Inventory/Widget/Inv.h"
@@ -24,6 +25,7 @@ AIsekaiCharacter::AIsekaiCharacter()
 {
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 	EquipmentComponent = CreateDefaultSubobject<UEquipmentComponent>(TEXT("InventoryEquipment"));
+	AtributosComponent = CreateDefaultSubobject<UAtributosSystem>(TEXT("AtributesComponent"));
 	
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	
@@ -177,8 +179,6 @@ void AIsekaiCharacter::Interact()
 	if (CurrentTarget != nullptr)
 	{
 		TargetInteractable->Execute_Interact(CurrentTarget, this);
-//		if (Inventory)
-	//		Inventory->InitItems(InventoryComponent->ItemSlots);
 	}
 }
 
@@ -189,24 +189,23 @@ void AIsekaiCharacter::OpenInventory()
 		
 		if (InventoryClass == nullptr) return;
 		
-			if (InventoryComponent)
-			{
-				Inventory = CreateWidget<UInv>(GetWorld(), InventoryClass);
-				Inventory->InventoryComponent = InventoryComponent;
-				Inventory->EquipmentComponent = EquipmentComponent;
-				
-				FInputModeUIOnly InputMode;
-				InputMode.SetWidgetToFocus(Inventory->TakeWidget());
-				InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-				
-				PC->SetInputMode(InputMode);
-				PC->FlushPressedKeys();
-				PC->bShowMouseCursor = true;
+		if (InventoryComponent)
+		{
+			Inventory = CreateWidget<UInv>(GetWorld(), InventoryClass);
+			Inventory->InventoryComponent = InventoryComponent;
+			Inventory->EquipmentComponent = EquipmentComponent;
+			
+			FInputModeUIOnly InputMode;
+			InputMode.SetWidgetToFocus(Inventory->TakeWidget());
+			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+			
+			PC->SetInputMode(InputMode);
+			PC->FlushPressedKeys();
+			PC->bShowMouseCursor = true;
+			
+			FSlateApplication::Get().SetKeyboardFocus(Inventory->TakeWidget(), EFocusCause::SetDirectly);
 
-				
-				FSlateApplication::Get().SetKeyboardFocus(Inventory->TakeWidget(), EFocusCause::SetDirectly);
-
-				Inventory->AddToViewport();
+			Inventory->AddToViewport();
 			}
 	}
 }

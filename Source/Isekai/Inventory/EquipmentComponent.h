@@ -39,4 +39,8 @@ public:
 	// Retorna o item no slot
 	UFUNCTION(BlueprintCallable, Category="Equipment")
 	FItemSlot GetItemAt(int32 SlotIndex) const;
+
+	virtual int32 UpdateSlotLeftClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent) override;
+
+	virtual int32 UpdateSlotRightClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent) override;
 };

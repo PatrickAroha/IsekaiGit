@@ -15,29 +15,26 @@ int UInventoryComponent::AddItem(UPDA_Master* ItemInfo, int32 Quantity)
 {
 	if (ItemInfo->bStackable)
 		return AddStack(ItemInfo, Quantity);
+	
+	Quantity = AddUnique(ItemInfo, Quantity);
 
-	for (int32 i = 0; i < InventorySize; i++)
-	{
-		if (ItemSlots[i].Item == nullptr)
-		{
-			AddUnique(ItemInfo, 1);
-			return 0;
-		}
-	}
 	return Quantity;
 }
 
-void UInventoryComponent::AddUnique(UPDA_Master* ItemInfo, int32 Quantity)
+int32 UInventoryComponent::AddUnique(UPDA_Master* ItemInfo, int32 Quantity)
 {
-	for (FItemSlot& Slots : ItemSlots)
+	for (int32 i = 0 ; i < InventorySize; i++)
 	{
-		if (Slots.Item == nullptr)
+		if (Quantity <= 0) return 0;
+		
+		if (ItemSlots[i].Item == nullptr && ItemSlots[i].Quantity <= 0)
 		{
-			Slots.Item = ItemInfo;
-			Slots.Quantity = Quantity;
-			return;
+			ItemSlots[i].Item = ItemInfo;
+			ItemSlots[i].Quantity = 1;
+			Quantity -= 1;
 		}
 	}
+	return Quantity;
 }
 
 int UInventoryComponent::AddStack(UPDA_Master* ItemInfo, int32 Quantity) 

@@ -1,33 +1,23 @@
 #include "Inv.h"
 #include "BaseInventory.h"
 #include "Equipment.h"
+#include "Components/CanvasPanel.h"
 
 void UInv::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	// Corrigido: verificação da classe de inventário
-	if (InventoryClass)
+	if (W_BaseInventory && InventoryComponent)
 	{
-		InventoryWidget = CreateWidget<UBaseInventory>(GetWorld(), InventoryClass);
-		if (InventoryWidget && InventoryComponent)
-		{
-			InventoryWidget->InventoryComponent = InventoryComponent;
-			InventoryWidget->GenerateInventory();
-			InventoryWidget->InitItems(InventoryComponent->ItemSlots);
-			InventoryWidget->AddToViewport();
-		}
+		W_BaseInventory->InventoryComponent = InventoryComponent;
+		W_BaseInventory->GenerateInventory();
+		W_BaseInventory->InitItems(InventoryComponent->ItemSlots);
 	}
 
-	if (EquipmentClass)
+	if (W_Equipment && EquipmentComponent)
 	{
-		EquipmentWidget = CreateWidget<UEquipment>(GetWorld(), EquipmentClass);
-		if (EquipmentWidget && EquipmentComponent)
-		{
-			EquipmentWidget->EquipmentComponent = EquipmentComponent;
-			EquipmentWidget->GenerateInventory();
-			EquipmentWidget->InitItems(EquipmentComponent->ItemSlots);
-			EquipmentWidget->AddToViewport();
-		}
+		W_Equipment->EquipmentComponent = EquipmentComponent;
+		W_Equipment->GenerateInventory();
+		W_Equipment->InitItems(EquipmentComponent->ItemSlots);
 	}
 }

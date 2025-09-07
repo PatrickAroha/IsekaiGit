@@ -40,11 +40,6 @@ UUserWidget* UGetWidgetMouseClick::GetWidgetUnderCursor(APlayerController* PC, b
                         bIsSlotInventory = true;
                     }
 
-                    UE_LOG(LogTemp, Warning, TEXT("Widget clicado: %s (Classe: %s) | SlotInventory? %s"),
-                        *UserWidget->GetName(),
-                        *ClassName,
-                        bIsSlotInventory ? TEXT("true") : TEXT("false"));
-
                     return UserWidget;
                 }
             }

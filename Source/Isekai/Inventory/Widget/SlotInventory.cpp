@@ -18,7 +18,6 @@ void USlotInventory::UpdateSlot()
 				Quantity = InventoryComponent->ItemSlots[SlotIndex].Quantity;
 				SlotIndexText->SetText(FText::AsNumber(Quantity));
 				ItemInfo = InventoryComponent->ItemSlots[SlotIndex].Item;
-				UE_LOG(LogTemp, Warning, TEXT("Update Slot Not Clear"));
 			}
 		}
 		else
@@ -28,6 +27,5 @@ void USlotInventory::UpdateSlot()
 			SlotIndexText->SetText(FText::GetEmpty());
 			Quantity = 0;
 			ItemInfo = nullptr;
-			UE_LOG(LogTemp, Warning, TEXT("Update Slot Clear"));
 		}
 }

@@ -30,7 +30,7 @@ public:
 
 	int AddStack(UPDA_Master* ItemData, int32 Quantity);
 
-	void AddUnique(UPDA_Master* ItemData, int32 Quantity);
+	int32 AddUnique(UPDA_Master* ItemData, int32 Quantity);
 
 	int NewStack(UPDA_Master* ItemData, int32 Quantity);
 

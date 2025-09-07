@@ -63,18 +63,18 @@ void UDragToggle::DragToggleDrop(FKey MouseEvent, int32 NewIndex, UBaseInventory
 		if (APlayerController* PC = GetLocalPlayer()->GetPlayerController(GetWorld()))
 		{
 			bool bIsSlotInventory = false;
-			UE_LOG(LogTemp, Warning, TEXT("1"));
+
 			if (UWidget* HitWidget = UGetWidgetMouseClick::GetWidgetUnderCursor(PC, bIsSlotInventory))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("2"));
+
 				if (HitWidget)
 				{
-					UE_LOG(LogTemp, Warning, TEXT("3"));
+
 					if (MouseEvent == EKeys::LeftMouseButton)
 					{
-						UE_LOG(LogTemp, Warning, TEXT("4"));
+
 						
-						int32 DragQuantity = GetInventoryComponent->UpdateSlotLeftClick(ItemSlot, NewIndex, NewInventoryComponent);
+						int32 DragQuantity = NewInventoryComponent->UpdateSlotLeftClick(ItemSlot, NewIndex, NewInventoryComponent);
 						
 						if (DragQuantity <= 0) { DragToggleCancel(); return; }
 						
@@ -88,7 +88,7 @@ void UDragToggle::DragToggleDrop(FKey MouseEvent, int32 NewIndex, UBaseInventory
 
 					if (MouseEvent == EKeys::RightMouseButton)
 					{
-						int32 DragQuantity = GetInventoryComponent->UpdateSlotRightClick(ItemSlot, NewIndex, NewInventoryComponent);
+						int32 DragQuantity = NewInventoryComponent->UpdateSlotRightClick(ItemSlot, NewIndex, NewInventoryComponent);
 						
 						if (DragQuantity <= 0) { DragToggleCancel(); return; }
 						

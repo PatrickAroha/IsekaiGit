@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,6 +6,8 @@
 #include "Isekai/Inventory/EquipmentComponent.h"
 #include "Inv.generated.h"
 
+class UAtributs;
+class UCanvasPanel;
 class UEquipment;
 class UBaseInventory;
 
@@ -15,6 +15,7 @@ class UBaseInventory;
 UCLASS()
 class ISEKAI_API UInv : public UUserWidget
 {
+	
 	GENERATED_BODY()
 
 public:
@@ -31,11 +32,21 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Widget")
 	TObjectPtr<UEquipment> EquipmentWidget = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TSubclassOf<UBaseInventory> InventoryClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Widget")
+	TObjectPtr<UAtributs> AtributsWidget = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TSubclassOf<UEquipment> EquipmentClass;
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* RootPanel;
+
+	UPROPERTY(meta = (BindWidget))
+	UEquipment* W_Equipment;
+
+	UPROPERTY(meta = (BindWidget))
+	UBaseInventory* W_BaseInventory;
+
+	UPROPERTY(meta = (BindWidget))
+	UAtributs* W_Atributs;
+
 
 protected:
 	

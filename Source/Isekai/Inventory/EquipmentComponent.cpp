@@ -55,5 +55,22 @@ FItemSlot UEquipmentComponent::GetItemAt(int32 SlotIndex) const
 	return ItemSlots[SlotIndex];
 }
 
+int32 UEquipmentComponent::UpdateSlotLeftClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent)
+{
+	
+	int32 ParentResult = Super::UpdateSlotLeftClick(GetItemSlot, NewIndex, InventoryComponent);
 
+	EquipItem(GetItemSlot, NewIndex);
+	
+	return ParentResult;
+}
+
+int32 UEquipmentComponent::UpdateSlotRightClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent)
+{
+	
+
+	int32 ParentResult = Super::UpdateSlotRightClick(GetItemSlot, NewIndex, InventoryComponent);
+	
+	return ParentResult;
+}
 
