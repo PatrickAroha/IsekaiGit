@@ -13,7 +13,9 @@
 #include "InputActionValue.h"
 #include "VectorUtil.h"
 #include "Blueprint/UserWidget.h"
+#include "Isekai/Inventory/EquipmentComponent.h"
 #include "Isekai/Inventory/PDA_Master.h"
+#include "Isekai/Inventory/Widget/Inv.h"
 #include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -21,6 +23,7 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 AIsekaiCharacter::AIsekaiCharacter()
 {
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
+	EquipmentComponent = CreateDefaultSubobject<UEquipmentComponent>(TEXT("InventoryEquipment"));
 	
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	
@@ -70,6 +73,7 @@ void AIsekaiCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AIsekaiCharacter::Move);
@@ -173,8 +177,8 @@ void AIsekaiCharacter::Interact()
 	if (CurrentTarget != nullptr)
 	{
 		TargetInteractable->Execute_Interact(CurrentTarget, this);
-		if (Inventory)
-			Inventory->InitItems(InventoryComponent->ItemSlots);
+//		if (Inventory)
+	//		Inventory->InitItems(InventoryComponent->ItemSlots);
 	}
 }
 
@@ -182,22 +186,23 @@ void AIsekaiCharacter::OpenInventory()
 {
 	if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
 	{
-
+		
 		if (InventoryClass == nullptr) return;
 		
 			if (InventoryComponent)
 			{
-				Inventory = CreateWidget<UBaseInventory>(GetWorld(), InventoryClass);
-				Inventory->InitItems(InventoryComponent->ItemSlots);
+				Inventory = CreateWidget<UInv>(GetWorld(), InventoryClass);
 				Inventory->InventoryComponent = InventoryComponent;
-
+				Inventory->EquipmentComponent = EquipmentComponent;
+				
 				FInputModeUIOnly InputMode;
 				InputMode.SetWidgetToFocus(Inventory->TakeWidget());
 				InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-
+				
 				PC->SetInputMode(InputMode);
 				PC->FlushPressedKeys();
 				PC->bShowMouseCursor = true;
+
 				
 				FSlateApplication::Get().SetKeyboardFocus(Inventory->TakeWidget(), EFocusCause::SetDirectly);
 

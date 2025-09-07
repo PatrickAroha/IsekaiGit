@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SlotInventory.h"
+#include "Isekai/Inventory/ItemStructure.h"
 #include "Blueprint/UserWidget.h"
 #include "DragWidget.generated.h"
 

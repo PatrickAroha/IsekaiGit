@@ -9,7 +9,8 @@
 #include "Isekai/Inventory/Widget/BaseInventory.h"
 #include "IsekaiCharacter.generated.h"
 
-
+class UInv;
+class UEquipmentComponent;
 class UInventoryComponent;
 class USpringArmComponent;
 class UCameraComponent;
@@ -61,13 +62,16 @@ class AIsekaiCharacter : public ACharacter
 public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TSubclassOf<UBaseInventory> InventoryClass;
+	TSubclassOf<UInv> InventoryClass;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Widget")
-	TObjectPtr<UBaseInventory> Inventory = nullptr;
+	TObjectPtr<UInv> Inventory = nullptr;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UInventoryComponent* InventoryComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UEquipmentComponent* EquipmentComponent;
 	
 	AIsekaiCharacter();
 

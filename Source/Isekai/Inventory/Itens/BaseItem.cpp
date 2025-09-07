@@ -25,6 +25,7 @@ void ABaseItem::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEve
 }
 #endif
 
+
 void ABaseItem::Interact_Implementation(AActor* Player)
 {
 	if (UInventoryComponent* Inv = Player->FindComponentByClass<UInventoryComponent>())

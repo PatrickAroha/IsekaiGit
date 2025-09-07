@@ -7,6 +7,7 @@
 #include "Isekai/Inventory/ItemStructure.h"
 #include "InteractInterface.generated.h"
 
+class UBaseInventoryComponent;
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI, Blueprintable)
 class UInteractInterface : public UInterface
@@ -22,6 +23,13 @@ class ISEKAI_API IInteractInterface
 	GENERATED_BODY()
 
 public:
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void LeftClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void RightClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent);
+	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Interact(AActor* Player);
 	

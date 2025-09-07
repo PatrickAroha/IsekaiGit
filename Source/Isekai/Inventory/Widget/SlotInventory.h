@@ -3,10 +3,11 @@
 #include "CoreMinimal.h"
 #include "Components/Image.h"
 #include "Blueprint/UserWidget.h"
-#include "BaseInventory.h"
 #include "Components/TextBlock.h"
 #include "SlotInventory.generated.h"
 
+class UInventoryComponent;
+class UBaseInventoryComponent;
 class UPDA_Master;
 
 UCLASS()
@@ -34,6 +35,11 @@ public:
 	int32 Quantity;
 
 	UPROPERTY(BlueprintReadWrite, meta=(ExposeOnSpawn = true))
-	UBaseInventory* OwnerInventory = nullptr;
-	
+	UBaseInventoryComponent* OwnerInventory;
+
+	UPROPERTY(BlueprintReadWrite, meta=(ExposeOnSpawn = true))
+	UInventoryComponent* Inv;
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateSlot();
 };

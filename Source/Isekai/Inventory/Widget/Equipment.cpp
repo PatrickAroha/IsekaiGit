@@ -1,21 +1,21 @@
-#include "BaseInventory.h"
+#include "Equipment.h"
 #include "Components/GridPanel.h"
 #include "Components/GridSlot.h"
-#include "Components/Button.h"
 #include "SlotInventory.h"
 #include "Isekai/Inventory/PDA_Master.h"
-#include "BaseInventory.h"
-#include "SlotInventory.h"
 #include "Components/Image.h"
+#include "Components/SizeBox.h"
+#include "Blueprint/WidgetTree.h"
 
-bool UBaseInventory::Initialize()
+
+bool UEquipment::Initialize()
 {
 	Super::Initialize();
 	
 	return true;
 }
 
-void UBaseInventory::GenerateInventory()
+void UEquipment::GenerateInventory()
 {
 	if (!InventoryGrid || !SlotClass)
 	{
@@ -25,8 +25,8 @@ void UBaseInventory::GenerateInventory()
 	InventoryGrid->ClearChildren();
 	Slots.Empty();
 
-	const int32 NumberOfSlots = InventoryComponent ? InventoryComponent->InventorySize : 0;
-	const int32 NumColumns = 3;
+	const int32 NumberOfSlots = 4;
+	const int32 NumColumns = 2;
 
 	for (int32 i = 0; i < NumberOfSlots; i++)
 	{
@@ -34,27 +34,41 @@ void UBaseInventory::GenerateInventory()
 		{
 			Slots.Add(NewSlot);
 			NewSlot->SlotIndex = i;
-			NewSlot->OwnerInventory = InventoryComponent;
-			
-			if (UGridSlot* GridSlot = InventoryGrid->AddChildToGrid(NewSlot))
+			NewSlot->OwnerInventory = EquipmentComponent;
+
+			// 🔹 Criar um SizeBox para forçar tamanho fixo
+			USizeBox* SizeBox = WidgetTree->ConstructWidget<USizeBox>(USizeBox::StaticClass());
+			SizeBox->SetWidthOverride(85.f);   // largura do slot
+			SizeBox->SetHeightOverride(85.f);  // altura do slot
+
+			// Adicionar o SlotInventory dentro do SizeBox
+			SizeBox->AddChild(NewSlot);
+
+			// Agora adicionar o SizeBox no GridPanel
+			if (UGridSlot* GridSlot = InventoryGrid->AddChildToGrid(SizeBox))
 			{
 				const int32 Row = i / NumColumns;
 				const int32 Column = i % NumColumns;
 
 				GridSlot->SetRow(Row);
 				GridSlot->SetColumn(Column);
+
+				GridSlot->SetPadding(FMargin(17.f)); // espaçamento entre os slots
+				GridSlot->SetHorizontalAlignment(HAlign_Center);
+				GridSlot->SetVerticalAlignment(VAlign_Center);
 			}
 		}
 	}
 }
 
-void UBaseInventory::InitItems(const TArray<FItemSlot>& ItemSlotsCopy)
+
+void UEquipment::InitItems(const TArray<FItemSlot>& ItemSlotsCopy)
 {
 	ItemSlots = ItemSlotsCopy;
 	FillSlots();
 }
 
-void UBaseInventory::FillSlots()
+void UEquipment::FillSlots()
 {
 	if (Slots.Num() > 0 && Slots[0])
 	{

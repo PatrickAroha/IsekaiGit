@@ -14,7 +14,7 @@
 #include "Isekai/Inventory/PDA_Master.h"
 #include "Isekai/Inventory/Widget/DragWidget.h"
 
-void UDragToggle::DragToggleStart(UDragWidget* GetDragWidget, UInventoryComponent* InventoryComponent, FKey MouseButton)
+void UDragToggle::DragToggleStart(UDragWidget* GetDragWidget, UBaseInventoryComponent* InventoryComponent, FKey MouseButton)
 {
 	
 	if (GetDragWidget->ItemSlot.Quantity <= 0)
@@ -50,27 +50,30 @@ void UDragToggle::DragToggleStart(UDragWidget* GetDragWidget, UInventoryComponen
 		GetInventoryComponent = InventoryComponent;
 		CreateDragWidget();
 		DragToggleUpdateWidgetLocation();
-		InventoryComponent->ItemSlots[LastIndex].Quantity = (InventoryComponent->ItemSlots[LastIndex].Quantity/2);
+		InventoryComponent->ItemSlots[LastIndex].Quantity = (GetInventoryComponent->ItemSlots[LastIndex].Quantity/2);
 	}
 }
 
-void UDragToggle::DragToggleDrop(FKey MouseEvent, int32 NewIndex, UInventoryComponent* NewInventoryComponent)
+void UDragToggle::DragToggleDrop(FKey MouseEvent, int32 NewIndex, UBaseInventoryComponent* NewInventoryComponent)
 {
 	if (DragToggleIsActive())
 	{
+		if (!NewInventoryComponent) return;
+		
 		if (APlayerController* PC = GetLocalPlayer()->GetPlayerController(GetWorld()))
 		{
 			bool bIsSlotInventory = false;
-	
-			if(UWidget* HitWidget = UGetWidgetMouseClick::GetWidgetUnderCursor(PC, bIsSlotInventory))
+			UE_LOG(LogTemp, Warning, TEXT("1"));
+			if (UWidget* HitWidget = UGetWidgetMouseClick::GetWidgetUnderCursor(PC, bIsSlotInventory))
 			{
-				
-			//	if (HitWidget->GetName() == "W_SlotInventory")
-				
+				UE_LOG(LogTemp, Warning, TEXT("2"));
+				if (HitWidget)
 				{
-					
+					UE_LOG(LogTemp, Warning, TEXT("3"));
 					if (MouseEvent == EKeys::LeftMouseButton)
 					{
+						UE_LOG(LogTemp, Warning, TEXT("4"));
+						
 						int32 DragQuantity = GetInventoryComponent->UpdateSlotLeftClick(ItemSlot, NewIndex, NewInventoryComponent);
 						
 						if (DragQuantity <= 0) { DragToggleCancel(); return; }
@@ -135,13 +138,15 @@ void UDragToggle::CreateDragWidget()
 {
 	if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
 	{
-		if (DragWidget)
+		if (!DragWidget->IsInViewport())
 		{
-			DragWidget->LastIndex = LastIndex;
-			DragWidget->ItemSlot = ItemSlot;
-			DragWidget->Texture = Texture;
-			
-			DragWidget->AddToViewport();
+			if (DragWidget)
+			{
+				DragWidget->LastIndex = LastIndex;
+				DragWidget->ItemSlot = ItemSlot;
+				DragWidget->Texture = Texture;
+				DragWidget->AddToViewport();
+			}
 		}
 	}
 }

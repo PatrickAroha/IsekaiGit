@@ -57,7 +57,7 @@ int UInventoryComponent::AddStack(UPDA_Master* ItemInfo, int32 Quantity)
 			}
 		}
 	}
-
+	
 	for (int32 i = 0; i < InventorySize; i++)
 	{
 		if (Quantity > 0 && ItemSlots[i].Item == nullptr)
@@ -65,7 +65,6 @@ int UInventoryComponent::AddStack(UPDA_Master* ItemInfo, int32 Quantity)
 	}
 	
 	return Quantity;
-	
 }
 
 int UInventoryComponent::NewStack(UPDA_Master* ItemData, int32 Quantity)
@@ -132,63 +131,6 @@ void UInventoryComponent::SearchItem(UPDA_Master* ItemInfo)
 	}
 }
 
-int32 UInventoryComponent::UpdateSlotRightClick(FItemSlot& GetItemSlot, int32 NewIndex, UInventoryComponent* InventoryComponent)
-{
-	if (GetItemSlot.Quantity > 0 && InventoryComponent->ItemSlots.IsValidIndex(NewIndex))
-	{
-		if (InventoryComponent->ItemSlots[NewIndex].Quantity > 0)
-		{
-			if (GetItemSlot.Item == InventoryComponent->ItemSlots[NewIndex].Item)
-			{
-				const int32 Espaco = ItemSlots[NewIndex].Item->MaxStack - ItemSlots[NewIndex].Quantity;
-				if (Espaco > 0)
-				{
-					InventoryComponent->ItemSlots[NewIndex].Quantity += 1;
-					return (GetItemSlot.Quantity - 1);
-				}
-				return GetItemSlot.Quantity;
-			}
-
-			return GetItemSlot.Quantity;
-		}
-	}
-	InventoryComponent->ItemSlots[NewIndex].Item = GetItemSlot.Item;
-	InventoryComponent->ItemSlots[NewIndex].Quantity = 1;
-	return (GetItemSlot.Quantity - 1); 
-}
-
-int32 UInventoryComponent::UpdateSlotLeftClick(FItemSlot& GetItemSlot, int32 NewIndex, UInventoryComponent* InventoryComponent)
-{
-	if (GetItemSlot.Quantity > 0 && InventoryComponent->ItemSlots.IsValidIndex(NewIndex))
-	{
-		if (InventoryComponent->ItemSlots[NewIndex].Quantity > 0)
-		{
-			if (GetItemSlot.Item == InventoryComponent->ItemSlots[NewIndex].Item)
-			{
-				const int32 Espaco = ItemSlots[NewIndex].Item->MaxStack - ItemSlots[NewIndex].Quantity;
-				if (Espaco > 0)
-				{
-					const int32 Add = FMath::Min(Espaco, GetItemSlot.Quantity);
-					InventoryComponent->ItemSlots[NewIndex].Quantity += Add;
-					if (Add + GetItemSlot.Quantity >= InventoryComponent->ItemSlots[NewIndex].Item->MaxStack)
-						return (GetItemSlot.Quantity - Add);
-				}
-				return(GetItemSlot.Quantity - Espaco);
-			}
-			Swap(InventoryComponent->ItemSlots[NewIndex], GetItemSlot);
-			return GetItemSlot.Quantity;
-		}
-	}
-	InventoryComponent->ItemSlots[NewIndex] = GetItemSlot;
-	return (GetItemSlot.Quantity - InventoryComponent->ItemSlots[NewIndex].Quantity); 
-}
-
-void UInventoryComponent::ClearSlot(int32 Index)
-{
-	ItemSlots[Index].Item = nullptr;
-	ItemSlots[Index].Quantity = 0;
-}
-
 void UInventoryComponent::ClearInventory()
 {
 	for (int32 i = 0 ; i < InventorySize; i++)
@@ -196,12 +138,10 @@ void UInventoryComponent::ClearInventory()
 		ItemSlots[i].Item = nullptr;
 		ItemSlots[i].Quantity = 0;
 	}
-	
 }
 
 void UInventoryComponent::BeginPlay()
 {
-
 	Super::BeginPlay();
 	
 	ItemSlots.SetNum(InventorySize);

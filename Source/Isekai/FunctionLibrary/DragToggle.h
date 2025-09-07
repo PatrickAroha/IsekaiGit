@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Isekai/Interfaces/InteractInterface.h"
 #include "Isekai/Inventory/InventoryComponent.h"
 #include "Subsystems/LocalPlayerSubsystem.h"
 #include "Isekai/Inventory/ItemStructure.h"
@@ -15,10 +16,10 @@ class ISEKAI_API UDragToggle : public ULocalPlayerSubsystem, public FTickableGam
 
 public:
 	UFUNCTION(BlueprintCallable, Category="Drag")
-	void DragToggleStart(UDragWidget* GetDragWidget, UInventoryComponent* InventoryComponent,  FKey MouseButton);
+	void DragToggleStart(UDragWidget* GetDragWidget, UBaseInventoryComponent* InventoryComponent,  FKey MouseButton);
 	
 	UFUNCTION(BlueprintCallable, Category="Drag")
-	void DragToggleDrop(FKey MouseEvent, int32 NewIndex, UInventoryComponent* NewInventoryComponent);
+	void DragToggleDrop(FKey MouseEvent, int32 NewIndex, UBaseInventoryComponent* NewInventoryComponent);
 	
 	UFUNCTION(BlueprintCallable, Category="Drag")
 	void DragToggleCancel();
@@ -63,7 +64,10 @@ public:
 	TSubclassOf<UDragWidget> W_DragSlotInventory;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta=(ExposeOnSpawn))
-	UInventoryComponent* GetInventoryComponent;
+	UBaseInventoryComponent* GetInventoryComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Character | Interaction")
+	TScriptInterface<IInteractInterface> TargetInteractable;
 	
 };
 
