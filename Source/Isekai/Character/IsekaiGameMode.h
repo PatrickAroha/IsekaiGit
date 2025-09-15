@@ -13,6 +13,7 @@ class AIsekaiGameMode : public AGameModeBase
 
 public:
 	AIsekaiGameMode();
+	
 };
 
 

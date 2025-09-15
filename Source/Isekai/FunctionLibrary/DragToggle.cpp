@@ -50,7 +50,11 @@ void UDragToggle::DragToggleStart(UDragWidget* GetDragWidget, UBaseInventoryComp
 		GetInventoryComponent = InventoryComponent;
 		CreateDragWidget();
 		DragToggleUpdateWidgetLocation();
-		InventoryComponent->ItemSlots[LastIndex].Quantity = (GetInventoryComponent->ItemSlots[LastIndex].Quantity/2);
+		if (InventoryComponent->ItemSlots[LastIndex].Quantity == 1)
+			InventoryComponent->ClearSlot(LastIndex);
+		else
+			InventoryComponent->ItemSlots[LastIndex].Quantity = (GetInventoryComponent->ItemSlots[LastIndex].Quantity/2);
+				
 	}
 }
 

@@ -116,6 +116,10 @@ void UStatusComponent::HandleAttributesUpdated(UAtributosSystem* /*AtribComp*/)
     Stamina = FMath::Clamp(Stamina, 0.0f, GetMax(EAtributeType::Stamina));
     Mana    = FMath::Clamp(Mana,    0.0f, GetMax(EAtributeType::Mana));
     
+    OnHealthChanged.Broadcast(Health, Health);
+    OnStaminaChanged.Broadcast(Stamina, Stamina);
+    OnManaChanged.Broadcast(Mana, Mana);
+    
     if (Health <= 0.0f && !bDied)
     {
         ApplyDeath();

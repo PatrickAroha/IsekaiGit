@@ -14,6 +14,8 @@
 #include "VectorUtil.h"
 #include "Blueprint/UserWidget.h"
 #include "Isekai/AtributesSystem/AtributosSystem.h"
+#include "Isekai/AtributesSystem/StatusComponent.h"
+#include "Isekai/Core/PlayerHUD.h"
 #include "Isekai/Inventory/EquipmentComponent.h"
 #include "Isekai/Inventory/PDA_Master.h"
 #include "Isekai/Inventory/Widget/Inv.h"
@@ -26,6 +28,7 @@ AIsekaiCharacter::AIsekaiCharacter()
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 	EquipmentComponent = CreateDefaultSubobject<UEquipmentComponent>(TEXT("InventoryEquipment"));
 	AtributosComponent = CreateDefaultSubobject<UAtributosSystem>(TEXT("AtributesComponent"));
+	StatusComponent = CreateDefaultSubobject<UStatusComponent>(TEXT("StatusComponent"));
 	
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	
@@ -51,9 +54,7 @@ AIsekaiCharacter::AIsekaiCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); 
 	FollowCamera->bUsePawnControlRotation = false;
-	
 }
-
 
 void AIsekaiCharacter::NotifyControllerChanged()
 {
@@ -143,7 +144,6 @@ void AIsekaiCharacter::Linetrace()
 
 	if (GetWorld()->LineTraceSingleByChannel(HitResult,Start,End,ECC_Visibility,TraceParams))
 	{
-		DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.2f);
 		if (HitResult.GetActor()->GetClass()->ImplementsInterface(UInteractInterface::StaticClass()))
 		{
 			if (CurrentTarget == nullptr)
@@ -186,26 +186,9 @@ void AIsekaiCharacter::OpenInventory()
 {
 	if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
 	{
-		
-		if (InventoryClass == nullptr) return;
-		
-		if (InventoryComponent)
-		{
-			Inventory = CreateWidget<UInv>(GetWorld(), InventoryClass);
-			Inventory->InventoryComponent = InventoryComponent;
-			Inventory->EquipmentComponent = EquipmentComponent;
-			
-			FInputModeUIOnly InputMode;
-			InputMode.SetWidgetToFocus(Inventory->TakeWidget());
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			
-			PC->SetInputMode(InputMode);
-			PC->FlushPressedKeys();
-			PC->bShowMouseCursor = true;
-			
-			FSlateApplication::Get().SetKeyboardFocus(Inventory->TakeWidget(), EFocusCause::SetDirectly);
-
-			Inventory->AddToViewport();
+			if (APlayerHUD* PlayerHUD = Cast<APlayerHUD>(PC->GetHUD()))
+			{
+				//PlayerHUD->ToggleInventory(InventoryComponent, EquipmentComponent);
 			}
 	}
 }

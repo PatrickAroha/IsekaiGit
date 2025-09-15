@@ -27,8 +27,7 @@ protected:
     void HandleAttributesUpdated(UAtributosSystem* AtribComp);
     
     void ApplyDeath();
-    
-    float GetMax(EAtributeType Type) const;
+
 
 public:
 
@@ -62,13 +61,22 @@ public:
     FOnDiedSignature OnDied;
 
     // ===== API =====
+    UFUNCTION(BlueprintCallable, Category="Status")
     void SubtractHealth(float Value);
+
+    UFUNCTION(BlueprintCallable, Category="Status")
     void AddHealth(float Value);
 
+    UFUNCTION(BlueprintCallable, Category="Status")
     void SubtractStamina(float Value);
+    
+    UFUNCTION(BlueprintCallable, Category="Status")
     void AddStamina(float Value);
 
+    UFUNCTION(BlueprintCallable, Category="Status")
     void SubtractMana(float Value);
+
+    UFUNCTION(BlueprintCallable, Category="Status")
     void AddMana(float Value);
 
     UFUNCTION(BlueprintPure, Category="Status")
@@ -76,4 +84,6 @@ public:
 
     UFUNCTION(BlueprintPure, Category="Status")
     bool IsDead() const { return bDied; }
+
+    float GetMax(EAtributeType Type) const;
 };
