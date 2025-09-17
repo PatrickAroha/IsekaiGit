@@ -8,9 +8,6 @@
 
 void APlayerHUD::ToggleInventory(UInventoryComponent* InventoryComp, UEquipmentComponent* EquipmentComp)
 {
-
-	UE_LOG(LogTemp, Warning, TEXT("opa"));
-	
 	APlayerController* PC = GetOwningPlayerController();
 	if (!PC || !InventoryClass) return;
 		InventoryWidget = CreateWidget<UInv>(PC, InventoryClass);

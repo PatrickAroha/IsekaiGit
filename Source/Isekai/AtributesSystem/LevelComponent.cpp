@@ -8,14 +8,14 @@ ULevelComponent::ULevelComponent()
 void ULevelComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	XPToNextLevel = CalculateNextXPRequirement();
 }
 
 void ULevelComponent::AddXP(float Amount)
 {
 	CurrentXP += Amount;
 	OnXPChanged.Broadcast(CurrentXP);
-
-	// Loop pra lidar com casos de ganhar muito XP de uma vez
+	
 	while (CurrentXP >= XPToNextLevel)
 	{
 		CurrentXP -= XPToNextLevel;
@@ -27,13 +27,11 @@ void ULevelComponent::LevelUp()
 {
 	CurrentLevel++;
 	XPToNextLevel = CalculateNextXPRequirement();
-
-	// Notifica quem estiver ouvindo
 	OnLevelUp.Broadcast(CurrentLevel);
+	OnXPChanged.Broadcast(CurrentXP);
 }
 
 float ULevelComponent::CalculateNextXPRequirement() const
 {
-	// Exemplo simples de curva de XP
-	return FMath::RoundToFloat(XPToNextLevel * XPScale);
+	return FMath::RoundToFloat(BaseXP * FMath::Pow(CurrentLevel, 2.0f));
 }

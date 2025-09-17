@@ -6,6 +6,7 @@
 #include "Isekai/Inventory/EquipmentComponent.h"
 #include "Inv.generated.h"
 
+class ULevelWidget;
 class UAtributs;
 class UCanvasPanel;
 class UEquipment;
@@ -34,6 +35,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Widget")
 	TObjectPtr<UAtributs> AtributsWidget = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Widget")
+	TObjectPtr<ULevelWidget> LevelWidget = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* RootPanel;

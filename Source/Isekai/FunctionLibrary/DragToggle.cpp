@@ -11,7 +11,9 @@
 #include "ToolContextInterfaces.h"
 
 #include "Blueprint/UserWidget.h"
+#include "GameFramework/Character.h"
 #include "Isekai/Inventory/PDA_Master.h"
+#include "Isekai/Inventory/Itens/BaseItem.h"
 #include "Isekai/Inventory/Widget/DragWidget.h"
 
 void UDragToggle::DragToggleStart(UDragWidget* GetDragWidget, UBaseInventoryComponent* InventoryComponent, FKey MouseButton)
@@ -62,17 +64,15 @@ void UDragToggle::DragToggleDrop(FKey MouseEvent, int32 NewIndex, UBaseInventory
 {
 	if (DragToggleIsActive())
 	{
-		if (!NewInventoryComponent) return;
-		
 		if (APlayerController* PC = GetLocalPlayer()->GetPlayerController(GetWorld()))
 		{
 			bool bIsSlotInventory = false;
 
 			if (UWidget* HitWidget = UGetWidgetMouseClick::GetWidgetUnderCursor(PC, bIsSlotInventory))
 			{
-
 				if (HitWidget)
 				{
+					if (!NewInventoryComponent) return;
 
 					if (MouseEvent == EKeys::LeftMouseButton)
 					{
@@ -100,13 +100,43 @@ void UDragToggle::DragToggleDrop(FKey MouseEvent, int32 NewIndex, UBaseInventory
 						
 						if (DragWidget)
 							DragWidget->UpdateWidget(ItemSlot, DragQuantity);
-						
+
+						return;
+					}
+				}
+			}
+				if (APawn* Pawn = PC->GetPawn())
+				{
+					if (ACharacter* OwnerChar = Cast<ACharacter>(Pawn))
+					{
+						FVector DropLocation = OwnerChar->GetActorLocation() + OwnerChar->GetActorForwardVector() * 100.f;
+						FActorSpawnParameters Params;
+
+						if (ABaseItem* DroppedItem = GetWorld()->SpawnActor<ABaseItem>(
+							ABaseItem::StaticClass(),
+							DropLocation,
+							FRotator::ZeroRotator,
+							Params))
+						{
+							DroppedItem->ItemInfo = ItemSlot.Item;
+							DroppedItem->Quantity = ItemSlot.Quantity;
+
+							if (DroppedItem->ItemInfo && DroppedItem->ItemInfo->WorldMesh)
+							{
+								if (UStaticMeshComponent* Mesh = DroppedItem->FindComponentByClass<UStaticMeshComponent>())
+								{
+									Mesh->SetStaticMesh(DroppedItem->ItemInfo->WorldMesh);
+								}
+							}
+						}
+
+						DragToggleCancel();
 					}
 				}
 			}
 		}
 	}
-}
+
 
 void UDragToggle::DragToggleCancel()
 {

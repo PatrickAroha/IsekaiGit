@@ -17,6 +17,7 @@
 #include "Isekai/AtributesSystem/StatusComponent.h"
 #include "Isekai/Core/PlayerHUD.h"
 #include "Isekai/Inventory/EquipmentComponent.h"
+#include "Isekai/AtributesSystem/LevelComponent.h"
 #include "Isekai/Inventory/PDA_Master.h"
 #include "Isekai/Inventory/Widget/Inv.h"
 #include "Kismet/GameplayStatics.h"
@@ -25,6 +26,7 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 AIsekaiCharacter::AIsekaiCharacter()
 {
+	LevelComponent = CreateDefaultSubobject<ULevelComponent>(TEXT("LevelComponent"));
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 	EquipmentComponent = CreateDefaultSubobject<UEquipmentComponent>(TEXT("InventoryEquipment"));
 	AtributosComponent = CreateDefaultSubobject<UAtributosSystem>(TEXT("AtributesComponent"));

@@ -9,6 +9,7 @@
 #include "Isekai/Inventory/Widget/BaseInventory.h"
 #include "IsekaiCharacter.generated.h"
 
+class ULevelComponent;
 class UStatusComponent;
 class UAtributosSystem;
 class UInv;
@@ -80,6 +81,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UStatusComponent* StatusComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	ULevelComponent* LevelComponent;
 	
 	AIsekaiCharacter();
 

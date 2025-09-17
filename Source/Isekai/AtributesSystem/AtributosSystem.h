@@ -27,6 +27,9 @@ public:
 	
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void HandleLevelUp(int32 NewLevel);
+
 public:
 	
 	UPROPERTY(BlueprintAssignable, Category="Events")

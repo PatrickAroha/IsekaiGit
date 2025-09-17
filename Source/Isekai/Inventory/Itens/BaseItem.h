@@ -28,7 +28,7 @@ public:
 	virtual void Interact_Implementation(AActor* Player) override;
 	virtual void EndFocus_Implementation() override;
 	virtual void BeginFocus_Implementation() override;
-
+	virtual void Use();
 	
 	// Sets default values for this actor's properties
 	ABaseItem();
@@ -39,5 +39,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Mesh")
 	UStaticMeshComponent* Mesh;
-
+	
+	
 };

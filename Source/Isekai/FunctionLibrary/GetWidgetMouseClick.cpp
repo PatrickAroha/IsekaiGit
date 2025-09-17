@@ -38,13 +38,11 @@ UUserWidget* UGetWidgetMouseClick::GetWidgetUnderCursor(APlayerController* PC, b
                     if (ClassName.Contains(TEXT("W_SlotInventory")))
                     {
                         bIsSlotInventory = true;
+                        return UserWidget;
                     }
-
-                    return UserWidget;
                 }
             }
         }
     }
-
     return nullptr; // nada sob o cursor
 }

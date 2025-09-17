@@ -1,5 +1,7 @@
 #include "AtributosSystem.h"
 
+#include "LevelComponent.h"
+
 
 UAtributosSystem::UAtributosSystem()
 {
@@ -37,6 +39,23 @@ int32 UAtributosSystem::GetValue(EAtributeType Atribute) const
 void UAtributosSystem::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (AActor* Owner = GetOwner())
+	{
+		if (ULevelComponent* LevelComp = Owner->FindComponentByClass<ULevelComponent>())
+		{
+			// Faz o bind no evento de LevelUp
+			LevelComp->OnLevelUp.AddDynamic(this, &UAtributosSystem::HandleLevelUp);
+		}
+	}
+	
+}
+
+void UAtributosSystem::HandleLevelUp(int32 NewLevel)
+{
+
+	AddBonusValue(EAtributeType::Attack, 10);
+	
 }
 
 void UAtributosSystem::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
