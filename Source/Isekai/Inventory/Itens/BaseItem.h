@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Isekai/Interfaces/InteractInterface.h"
 #include "GameFramework/Actor.h"
+#include "Isekai/Character/IsekaiCharacter.h"
 #include "Isekai/Inventory/PDA_Master.h"
 #include "BaseItem.generated.h"
 
@@ -25,9 +26,11 @@ public:
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
 	
-	virtual void Interact_Implementation(AActor* Player) override;
+	virtual void Interact_Implementation(AIsekaiCharacter* Player) override;
 	virtual void EndFocus_Implementation() override;
 	virtual void BeginFocus_Implementation() override;
+	
+	UFUNCTION(BlueprintCallable, Category = "Item")
 	virtual void Use();
 	
 	// Sets default values for this actor's properties
@@ -40,5 +43,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Mesh")
 	UStaticMeshComponent* Mesh;
 	
-	
+	UPROPERTY(EditAnywhere, Category = "Mesh")
+	AIsekaiCharacter* ItemOwner;
 };

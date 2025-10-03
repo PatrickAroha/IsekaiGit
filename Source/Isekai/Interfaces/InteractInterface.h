@@ -7,6 +7,7 @@
 #include "Isekai/Inventory/ItemStructure.h"
 #include "InteractInterface.generated.h"
 
+class AIsekaiCharacter;
 class UBaseInventoryComponent;
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI, Blueprintable)
@@ -31,7 +32,7 @@ public:
 	void RightClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent);
 	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void Interact(AActor* Player);
+	void Interact(AIsekaiCharacter* Player);
 	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void BeginFocus();

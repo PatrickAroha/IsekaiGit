@@ -7,11 +7,19 @@ UEquipmentComponent::UEquipmentComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	ItemSlots.SetNum(EquipmentSize);
+	AllowedTypes.SetNum(EquipmentSize);
+
 	for (int32 i = 0; i < EquipmentSize; i++)
 	{
 		ItemSlots[i].Item = nullptr;
 		ItemSlots[i].Quantity = 0;
 	}
+	
+	AllowedTypes[0] = EItemCategory::Weapon;
+	AllowedTypes[1] = EItemCategory::Armor;
+	AllowedTypes[2] = EItemCategory::Consumable;
+	AllowedTypes[3] = EItemCategory::Consumable;
+
 }
 
 void UEquipmentComponent::BeginPlay()
@@ -75,6 +83,9 @@ int32 UEquipmentComponent::UpdateSlotLeftClick(FItemSlot& GetItemSlot, int32 New
 	if (!IsValid(GetItemSlot.Item) || !GetItemSlot.Item->bEquipable)
 		return GetItemSlot.Quantity;
 
+	if (!AllowedTypes.IsValidIndex(NewIndex) || AllowedTypes[NewIndex] != GetItemSlot.Item->Type)
+		return GetItemSlot.Quantity;
+
 	UnequipItem(NewIndex);
 	
 	int32 ParentResult = Super::UpdateSlotLeftClick(GetItemSlot, NewIndex, InventoryComponent);
@@ -90,6 +101,9 @@ int32 UEquipmentComponent::UpdateSlotLeftClick(FItemSlot& GetItemSlot, int32 New
 int32 UEquipmentComponent::UpdateSlotRightClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent)
 {
 	if (!IsValid(GetItemSlot.Item) || !GetItemSlot.Item->bEquipable)
+		return GetItemSlot.Quantity;
+
+	if (!AllowedTypes.IsValidIndex(NewIndex) || AllowedTypes[NewIndex] != GetItemSlot.Item->Type)
 		return GetItemSlot.Quantity;
 	
 	UnequipItem(NewIndex);

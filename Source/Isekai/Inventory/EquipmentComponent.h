@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Isekai/Inventory/BaseInventoryComponent.h"
+#include "Isekai/Inventory/PDA_Master.h"
 #include "ItemStructure.h"
 #include "EquipmentComponent.generated.h"
 
@@ -17,6 +18,12 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Equipment")
 	int32 EquipmentSize = 4;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Item")
+	EItemCategory Type = EItemCategory::Misc;
+
+	UPROPERTY()
+	TArray<EItemCategory> AllowedTypes;
 	
 	virtual void BeginPlay() override;
 
@@ -37,5 +44,7 @@ public:
 	virtual int32 UpdateSlotRightClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent) override;
 
 	virtual void ClearSlot(int32 Index) override;
+
+	
 	
 };

@@ -1,6 +1,7 @@
 #include "BaseItem.h"
 
 #include "IDetailTreeNode.h"
+#include "Isekai/Character/IsekaiCharacter.h"
 #include "Isekai/Inventory/InventoryComponent.h"
 #include "Isekai/Inventory/PDA_Master.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -26,10 +27,11 @@ void ABaseItem::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEve
 #endif
 
 
-void ABaseItem::Interact_Implementation(AActor* Player)
+void ABaseItem::Interact_Implementation(AIsekaiCharacter* Player)
 {
 	if (UInventoryComponent* Inv = Player->FindComponentByClass<UInventoryComponent>())
 	{
+		ItemOwner = Player;
 		if (int32 StackQuantity = Inv->AddItem(ItemInfo, Quantity); StackQuantity <= 0)
 		{
 			Destroy();
@@ -49,6 +51,7 @@ void ABaseItem::BeginFocus_Implementation()
 		Mesh->SetRenderCustomDepth(true);
 	}
 }
+
 
 void ABaseItem::Use()
 {
@@ -70,8 +73,3 @@ void ABaseItem::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
-
-
-
-
