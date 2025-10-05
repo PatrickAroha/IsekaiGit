@@ -35,5 +35,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void ClearSlot(int32 Index);
-	
+
+	UFUNCTION(BlueprintCallable)
+	virtual void Use() {}
 };

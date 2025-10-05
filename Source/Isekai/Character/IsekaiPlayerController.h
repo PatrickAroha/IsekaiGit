@@ -16,7 +16,7 @@ protected:
 
 	void ToggleInventory();
 
-//	virtual void OnPossess(APawn* InPawn) override;
+	//	virtual void OnPossess(APawn* InPawn) override;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* InventoryAction;

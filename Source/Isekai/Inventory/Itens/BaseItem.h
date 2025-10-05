@@ -30,9 +30,6 @@ public:
 	virtual void EndFocus_Implementation() override;
 	virtual void BeginFocus_Implementation() override;
 	
-	UFUNCTION(BlueprintCallable, Category = "Item")
-	virtual void Use();
-	
 	// Sets default values for this actor's properties
 	ABaseItem();
 	
@@ -43,6 +40,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Mesh")
 	UStaticMeshComponent* Mesh;
 	
-	UPROPERTY(EditAnywhere, Category = "Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Mesh")
 	AIsekaiCharacter* ItemOwner;
 };

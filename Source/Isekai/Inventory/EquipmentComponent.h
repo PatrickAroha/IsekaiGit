@@ -6,6 +6,7 @@
 #include "ItemStructure.h"
 #include "EquipmentComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPotionChanged, FItemSlot&, Item);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ISEKAI_API UEquipmentComponent : public UBaseInventoryComponent
@@ -44,7 +45,38 @@ public:
 	virtual int32 UpdateSlotRightClick(FItemSlot& GetItemSlot, int32 NewIndex, UBaseInventoryComponent* InventoryComponent) override;
 
 	virtual void ClearSlot(int32 Index) override;
+	void NextEquipItem();
 
+	void EquipPotion(FItemSlot& Item, int32 Index);
+
+	virtual void Use() override;
+
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnPotionChanged OnPotionChanged;
 	
+	UPROPERTY(BlueprintReadWrite, Category = "Equipment")
+	FItemSlot ItemEquiped;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Equipment")
+	int32 PotionEquipIndex = 2;
 	
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

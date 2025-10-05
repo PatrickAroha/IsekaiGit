@@ -7,8 +7,10 @@
 #include "Isekai/Inventory/ItemStructure.h"
 #include "InteractInterface.generated.h"
 
+class ABaseItem;
 class AIsekaiCharacter;
 class UBaseInventoryComponent;
+
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI, Blueprintable)
 class UInteractInterface : public UInterface

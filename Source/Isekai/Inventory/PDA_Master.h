@@ -1,9 +1,12 @@
 #pragma once
 
+#include "Isekai/Character/IsekaiCharacter.h"
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "Isekai/AtributesSystem/AttributesTypes.h"
 #include "PDA_Master.generated.h"
+
+class UObjectItemBase;
 
 UENUM(BlueprintType)
 enum class EItemRarity : uint8
@@ -101,7 +104,13 @@ public:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Visual")
     TObjectPtr<UTexture2D> Icon;
 
+    UPROPERTY(EditDefaultsOnly, Instanced, BlueprintReadOnly, Category="Item")
+    UObjectItemBase* ItemLogic;
+
     // 🔹 Só mostra atributos se for equipável
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Item|Equipment", meta=(EditCondition="bEquipable"))
     TMap<EAtributeType, int32> AttributeBonus;
+
+ //   void Use(AIsekaiCharacter* Player);
+    
 };

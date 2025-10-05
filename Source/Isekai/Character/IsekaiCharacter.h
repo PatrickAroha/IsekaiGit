@@ -54,7 +54,13 @@ class AIsekaiCharacter : public ACharacter
 	UInputAction* InventoryAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* NextEquipPotion;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* InventoryClear;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* UsePotion;
 	
 	UPROPERTY(EditAnywhere, Category = "Character | Interaction")
 	TScriptInterface<IInteractInterface> TargetInteractable;
@@ -102,6 +108,8 @@ protected:
 	void ClearInventory();
 
 	virtual void Tick(float DeltaSeconds) override;
+	void NextPotionInput();
+	void UseEquipPotion();
 
 	virtual void NotifyControllerChanged() override;
 

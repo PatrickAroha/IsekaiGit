@@ -90,6 +90,10 @@ void AIsekaiCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(InventoryAction, ETriggerEvent::Started, this, &AIsekaiCharacter::OpenInventory);
 
 		EnhancedInputComponent->BindAction(InventoryClear, ETriggerEvent::Started, this, &AIsekaiCharacter::ClearInventory);
+
+		EnhancedInputComponent->BindAction(NextEquipPotion, ETriggerEvent::Triggered, this, &AIsekaiCharacter::NextPotionInput);
+
+		EnhancedInputComponent->BindAction(UsePotion, ETriggerEvent::Started, this, &AIsekaiCharacter::UseEquipPotion);
 	}
 	else
 	{
@@ -175,7 +179,6 @@ void AIsekaiCharacter::Linetrace()
 	CurrentTarget = nullptr;
 }
 
-
 void AIsekaiCharacter::Interact()
 {
 	if (CurrentTarget != nullptr)
@@ -204,4 +207,23 @@ void AIsekaiCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	Linetrace();
+}
+
+void AIsekaiCharacter::NextPotionInput()
+{
+	if (EquipmentComponent)
+	{
+		EquipmentComponent->NextEquipItem();
+	}
+}
+
+void AIsekaiCharacter::UseEquipPotion()
+{
+	if (EquipmentComponent)
+	{
+		if (EquipmentComponent->ItemEquiped.Item && EquipmentComponent->PotionEquipIndex)
+		{
+			EquipmentComponent->Use();
+		}
+	}
 }

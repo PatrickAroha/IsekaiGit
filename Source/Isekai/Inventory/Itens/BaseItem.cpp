@@ -53,12 +53,6 @@ void ABaseItem::BeginFocus_Implementation()
 }
 
 
-void ABaseItem::Use()
-{
-	
-}
-
-
 void ABaseItem::EndFocus_Implementation()
 {
 	if (Mesh)

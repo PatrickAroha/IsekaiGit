@@ -74,4 +74,3 @@ void UBaseInventoryComponent::ClearSlot(int32 Index)
 	ItemSlots[Index].Quantity = 0;
 }
 
-

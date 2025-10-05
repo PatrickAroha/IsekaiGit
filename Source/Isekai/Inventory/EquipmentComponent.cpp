@@ -1,8 +1,9 @@
 #include "EquipmentComponent.h"
 #include "Isekai/AtributesSystem/AtributosSystem.h"
 #include "Isekai/Inventory/PDA_Master.h"
+#include "Itens/ObjectItemBase.h"
 
-UEquipmentComponent::UEquipmentComponent()
+UEquipmentComponent::UEquipmentComponent(): ItemEquiped()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
@@ -14,12 +15,11 @@ UEquipmentComponent::UEquipmentComponent()
 		ItemSlots[i].Item = nullptr;
 		ItemSlots[i].Quantity = 0;
 	}
-	
+
 	AllowedTypes[0] = EItemCategory::Weapon;
 	AllowedTypes[1] = EItemCategory::Armor;
 	AllowedTypes[2] = EItemCategory::Consumable;
 	AllowedTypes[3] = EItemCategory::Consumable;
-
 }
 
 void UEquipmentComponent::BeginPlay()
@@ -41,6 +41,11 @@ void UEquipmentComponent::EquipItem(FItemSlot& ItemSlot, int32 SlotIndex)
 			{
 				Atribs->AddBonusValue(Bonus.Key, Bonus.Value);
 			}
+
+			if (ItemSlot.Item && ItemSlot.Item->Type == EItemCategory::Consumable)
+			{
+				EquipPotion(ItemSlot, SlotIndex);
+			}
 		}
 	}
 }
@@ -60,6 +65,11 @@ void UEquipmentComponent::UnequipItem(int32 SlotIndex)
 					Atribs->RemoveValue(Bonus.Key, Bonus.Value);
 				}
 			}
+
+			ItemEquiped.Item = nullptr;
+			ItemEquiped.Quantity = 0;
+			EquipPotion(ItemEquiped, SlotIndex);
+			
 		}
 	}
 }
@@ -122,5 +132,58 @@ void UEquipmentComponent::ClearSlot(int32 Index)
 {
 	UnequipItem(Index);
 	Super::ClearSlot(Index);
+}
+
+void UEquipmentComponent::NextEquipItem()
+{
+	if (EquipmentSize <= 0) return;
+
+	int32 StartIndex = PotionEquipIndex;
+	
+	do
+	{
+		PotionEquipIndex++;
+		if (PotionEquipIndex >= EquipmentSize)
+		{
+			PotionEquipIndex = 0;
+		}
+
+		const FItemSlot& Slot = ItemSlots[PotionEquipIndex];
+		if (Slot.Item && Slot.Item->Type == EItemCategory::Consumable)
+		{
+			EquipPotion(ItemSlots[PotionEquipIndex], PotionEquipIndex);
+			return;
+		}
+
+	} while (PotionEquipIndex != StartIndex);
+	
+	ItemEquiped = FItemSlot();
+	OnPotionChanged.Broadcast(ItemEquiped);
+}
+
+void UEquipmentComponent::EquipPotion(FItemSlot& Item, int32 Index)
+{
+
+	PotionEquipIndex = Index;
+	ItemEquiped = Item;
+	OnPotionChanged.Broadcast(ItemEquiped);
+	
+}
+
+void UEquipmentComponent::Use()
+{
+	FItemSlot& PotionSlot = ItemSlots[PotionEquipIndex];
+
+	if (AIsekaiCharacter* Player = Cast<AIsekaiCharacter>(GetOwner()))
+	{
+		if (Player->StatusComponent)
+		{
+			PotionSlot.Item->ItemLogic->Use(Cast<AIsekaiCharacter>(GetOwner()));
+
+			if (ItemSlots[PotionEquipIndex].Quantity <= 1) ClearSlot(PotionEquipIndex);
+
+			else ItemSlots[PotionEquipIndex].Quantity--;
+		}
+	}
 }
 
