@@ -1,6 +1,8 @@
 #include "AtributosSystem.h"
 
 #include "LevelComponent.h"
+#include "StatusComponent.h"
+#include "Isekai/Character/IsekaiCharacter.h"
 
 
 UAtributosSystem::UAtributosSystem()
@@ -12,21 +14,47 @@ void UAtributosSystem::SetValue(EAtributeType Atribute, int32 NewValue)
 {
 	if (Attributes.Contains(Atribute))
 		Attributes[Atribute] = NewValue;
-	OnAttributesUpdated.Broadcast(this);
+
+	OnAttributesUpdated.Broadcast(this, Atribute, NewValue);
 }
 
-void UAtributosSystem::AddBonusValue(EAtributeType Atribute, int32 Amount)
+void UAtributosSystem::AddBonusValue(EAtributeType Atribute, float Amount)
 {
-	if (Attributes.Contains(Atribute))
+	if (!Attributes.Contains(Atribute)) return;
+	
+	if (Amount > 1)
+	{
 		Attributes[Atribute] += Amount;
-	OnAttributesUpdated.Broadcast(this);
+		OnAttributesUpdated.Broadcast(this, Atribute, Amount);
+	}
+	else
+	{
+		if (BaseAttributes.Contains(Atribute))
+		{
+			Attributes[Atribute] +=  BaseAttributes[Atribute] * Amount;
+			OnAttributesUpdated.Broadcast(this, Atribute, Amount);
+		}
+	}
 }
 
-void UAtributosSystem::RemoveValue(EAtributeType Atribute, int32 Amount)
+void UAtributosSystem::RemoveValue(EAtributeType Atribute, float Amount)
 {
-	if (Attributes.Contains(Atribute))
-		Attributes[Atribute] = FMath::Max(0, Attributes[Atribute] - Amount);
-	OnAttributesUpdated.Broadcast(this);
+	if (!Attributes.Contains(Atribute)) return;
+
+	if (Amount > 1)
+	{
+		Attributes[Atribute] = FMath::Max(0.0f, Attributes[Atribute] - Amount);
+		OnAttributesUpdated.Broadcast(this, Atribute, -Amount);
+	}
+	else
+	{
+		if (BaseAttributes.Contains(Atribute))
+		{
+			float RemoveAmount = BaseAttributes[Atribute] * Amount;
+			Attributes[Atribute] = FMath::Max(0.0f, Attributes[Atribute] - RemoveAmount);
+			OnAttributesUpdated.Broadcast(this, Atribute, -RemoveAmount);
+		}
+	}
 }
 
 int32 UAtributosSystem::GetValue(EAtributeType Atribute) const
@@ -38,17 +66,16 @@ int32 UAtributosSystem::GetValue(EAtributeType Atribute) const
 
 void UAtributosSystem::BeginPlay()
 {
+	BaseAttributes = Attributes;
 	Super::BeginPlay();
 
 	if (AActor* Owner = GetOwner())
 	{
 		if (ULevelComponent* LevelComp = Owner->FindComponentByClass<ULevelComponent>())
 		{
-			// Faz o bind no evento de LevelUp
 			LevelComp->OnLevelUp.AddDynamic(this, &UAtributosSystem::HandleLevelUp);
 		}
 	}
-	
 }
 
 void UAtributosSystem::HandleLevelUp(int32 NewLevel)

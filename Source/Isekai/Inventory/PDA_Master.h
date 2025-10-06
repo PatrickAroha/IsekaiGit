@@ -109,7 +109,7 @@ public:
 
     // 🔹 Só mostra atributos se for equipável
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Item|Equipment", meta=(EditCondition="bEquipable"))
-    TMap<EAtributeType, int32> AttributeBonus;
+    TMap<EAtributeType, float> AttributeBonus;
 
  //   void Use(AIsekaiCharacter* Player);
     

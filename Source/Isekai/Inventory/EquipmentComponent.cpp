@@ -25,7 +25,6 @@ UEquipmentComponent::UEquipmentComponent(): ItemEquiped()
 void UEquipmentComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void UEquipmentComponent::EquipItem(FItemSlot& ItemSlot, int32 SlotIndex)
@@ -37,7 +36,7 @@ void UEquipmentComponent::EquipItem(FItemSlot& ItemSlot, int32 SlotIndex)
 	{
 		if (UAtributosSystem* Atribs = Owner->FindComponentByClass<UAtributosSystem>())
 		{
-			for (const TPair<EAtributeType, int32>& Bonus : ItemSlots[SlotIndex].Item->AttributeBonus)
+			for (const TPair<EAtributeType, float>& Bonus : ItemSlots[SlotIndex].Item->AttributeBonus)
 			{
 				Atribs->AddBonusValue(Bonus.Key, Bonus.Value);
 			}
@@ -60,7 +59,7 @@ void UEquipmentComponent::UnequipItem(int32 SlotIndex)
 		{
 			if (ItemSlots[SlotIndex].Item && ItemSlots[SlotIndex].Item->AttributeBonus.Num() > 0)
 			{
-				for (const TPair<EAtributeType, int32>& Bonus : ItemSlots[SlotIndex].Item->AttributeBonus)
+				for (const TPair<EAtributeType, float>& Bonus : ItemSlots[SlotIndex].Item->AttributeBonus)
 				{
 					Atribs->RemoveValue(Bonus.Key, Bonus.Value);
 				}

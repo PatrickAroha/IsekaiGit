@@ -16,7 +16,7 @@ void UStatusComponent::BeginPlay()
         AtributosSystem = Owner->FindComponentByClass<UAtributosSystem>();
         if (AtributosSystem)
         {
-
+            BaseAttributes = AtributosSystem->BaseAttributes;
             Health  = GetMax(EAtributeType::Vida);
             Stamina = GetMax(EAtributeType::Stamina);
             Mana    = GetMax(EAtributeType::Mana);
@@ -40,27 +40,52 @@ void UStatusComponent::ApplyDeath()
 }
 
 // ---------- HEALTH ----------
-void UStatusComponent::SubtractHealth(float Value)
+void UStatusComponent::SubtractHealth(float Value, EAtributeType Atribute)
 {
     if (!AtributosSystem || bDied) return;
 
-    const float Old = Health;
-    Health = FMath::Max(Health - Value, 0.0f);
-    OnHealthChanged.Broadcast(Old, Health);
-    
-    if (Health <= 0.0f)
+    if (Value > 1)
     {
-        ApplyDeath();
+        const float Old = Health;
+        Health = FMath::Max(Health - Value, 0.0f);
+        OnHealthChanged.Broadcast(Old, Health);
+    
+        if (Health <= 0.0f)
+        {
+            ApplyDeath();
+        }
+    }
+    else
+    {
+        const float Old = Health;
+        Health -= Health * (Value);
+        Health = FMath::Clamp(Health, 0.0f, GetMax(EAtributeType::Vida));
+        OnHealthChanged.Broadcast(Old, Health);
+    
+        if (Health <= 0.0f)
+        {
+            ApplyDeath();
+        }
     }
 }
 
-void UStatusComponent::AddHealth(float Value)
+void UStatusComponent::AddHealth(float Value, EAtributeType Atribute)
 {
     if (!AtributosSystem || bDied) return;
 
-    const float Old = Health;
-    Health = FMath::Clamp(Health + Value, 0.0f, GetMax(EAtributeType::Vida));
-    OnHealthChanged.Broadcast(Old, Health);
+    if (Value > 1)
+    {
+        const float Old = Health;
+        Health = FMath::Clamp(Health + Value, 0.0f, GetMax(EAtributeType::Vida));
+        OnHealthChanged.Broadcast(Old, Health);  
+    }
+    else
+    {
+        const float Old = Health;
+        Health += Health * Value;
+        Health = FMath::Clamp(Health, 0.0f, GetMax(EAtributeType::Vida));
+        OnHealthChanged.Broadcast(Old, Health);  
+    }
 }
 
 // ---------- STAMINA ----------
@@ -110,8 +135,29 @@ float UStatusComponent::GetNormalizedHealth() const
     return (MaxH > 0.f) ? (Health / MaxH) : 0.0f;
 }
 
-void UStatusComponent::HandleAttributesUpdated(UAtributosSystem* /*AtribComp*/)
+void UStatusComponent::HandleAttributesUpdated(UAtributosSystem* AtribComp, EAtributeType Atribute, float Amount)
 {
+    switch (Atribute)
+    {
+        case EAtributeType::Vida:
+        if (Amount > 0.0f)
+             AddHealth(Amount, Atribute);
+        else
+            SubtractHealth(-Amount, Atribute);
+        break;
+
+        case EAtributeType::Stamina:
+        AddStamina(Amount);
+        break;
+
+        case EAtributeType::Mana:
+        AddMana(Amount);
+        break;
+
+        default:
+        break;
+    }
+    
     Health  = FMath::Clamp(Health,  0.0f, GetMax(EAtributeType::Vida));
     Stamina = FMath::Clamp(Stamina, 0.0f, GetMax(EAtributeType::Stamina));
     Mana    = FMath::Clamp(Mana,    0.0f, GetMax(EAtributeType::Mana));

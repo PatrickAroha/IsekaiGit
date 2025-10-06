@@ -41,7 +41,7 @@ public:
 	class UTextBlock* DodgeText;
 
 	UFUNCTION()
-	void UpdateAttributes(class UAtributosSystem* Atributes);
+	void UpdateAttributes(UAtributosSystem* AtribComp, EAtributeType Atribute, float Amount);
 
 	virtual void NativeConstruct() override;
 	

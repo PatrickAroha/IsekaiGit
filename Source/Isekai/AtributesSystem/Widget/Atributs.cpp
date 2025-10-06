@@ -1,6 +1,6 @@
 #include "Atributs.h"
 
-void UAtributs::UpdateAttributes(UAtributosSystem* AtribComp)
+void UAtributs::UpdateAttributes(UAtributosSystem* AtribComp, EAtributeType Atribute, float Amount)
 {
 	if (!AtribComp) return;
 
@@ -60,7 +60,7 @@ void UAtributs::NativeConstruct()
 		{
 			if (UAtributosSystem* AtribComp = Pawn->FindComponentByClass<UAtributosSystem>())
 			{
-				UpdateAttributes(AtribComp);
+				UpdateAttributes(AtribComp,  EAtributeType::Attack, 0);
 
 				AtribComp->OnAttributesUpdated.AddDynamic(this, &UAtributs::UpdateAttributes);
 			}

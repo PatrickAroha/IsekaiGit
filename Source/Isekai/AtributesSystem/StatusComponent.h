@@ -24,7 +24,7 @@ protected:
     virtual void BeginPlay() override;
     
     UFUNCTION()
-    void HandleAttributesUpdated(UAtributosSystem* AtribComp);
+    void HandleAttributesUpdated(UAtributosSystem* AtribComp, EAtributeType Atribute, float Amount);
     
     void ApplyDeath();
 
@@ -47,6 +47,8 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Status")
     bool bDied = false;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Status")
+    TMap<EAtributeType, int32> BaseAttributes;
 
     UPROPERTY(BlueprintAssignable, Category="Status")
     FOnHealthChangedSignature OnHealthChanged;
@@ -62,10 +64,10 @@ public:
 
     // ===== API =====
     UFUNCTION(BlueprintCallable, Category="Status")
-    void SubtractHealth(float Value);
+    void SubtractHealth(float Value, EAtributeType Atribute);
 
     UFUNCTION(BlueprintCallable, Category="Status")
-    void AddHealth(float Value);
+    void AddHealth(float Value, EAtributeType Atribute);
 
     UFUNCTION(BlueprintCallable, Category="Status")
     void SubtractStamina(float Value);
