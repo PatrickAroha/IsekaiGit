@@ -40,6 +40,11 @@ UUserWidget* UGetWidgetMouseClick::GetWidgetUnderCursor(APlayerController* PC, b
                         bIsSlotInventory = true;
                         return UserWidget;
                     }
+                    if (ClassName.Contains(TEXT("W_Equipment")))
+                    {
+                        bIsSlotInventory = false;
+                        return UserWidget;
+                    }
                 }
             }
         }

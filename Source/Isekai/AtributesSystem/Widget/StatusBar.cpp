@@ -16,32 +16,23 @@ void UStatusBar::NativeConstruct()
 			StatusComponent = Pawn->FindComponentByClass<UStatusComponent>();
 			if (StatusComponent)
 			{
-				switch (AtributeType)
-				{
-				case EAtributeType::Vida:
-					StatusComponent->OnHealthChanged.AddDynamic(this, &UStatusBar::UpdateBarValue);
-					UpdateBarValue(StatusComponent->Health, StatusComponent->Health);
-					break;
-
-				case EAtributeType::Mana:
-					StatusComponent->OnManaChanged.AddDynamic(this, &UStatusBar::UpdateBarValue);
-					UpdateBarValue(StatusComponent->Mana, StatusComponent->Mana);
-					break;
-
-				case EAtributeType::Stamina:
-					StatusComponent->OnStaminaChanged.AddDynamic(this, &UStatusBar::UpdateBarValue);
-					UpdateBarValue(StatusComponent->Stamina, StatusComponent->Stamina);
-					break;
-
-				default: ;
-					
-				}
+				StatusComponent->OnAttributeChanged.AddDynamic(this, &UStatusBar::OnAttributeUpdated);
+				
+				UpdateBarValue(StatusComponent->GetMax(AtributeType));
 			}
 		}
 	}
 }
 
-void UStatusBar::UpdateBarValue(float OldValue, float NewValue)
+void UStatusBar::OnAttributeUpdated(EAtributeType Atribute, float NewValue)
+{
+	if (Atribute == AtributeType)
+	{
+		UpdateBarValue(NewValue);
+	}
+}
+
+void UStatusBar::UpdateBarValue(float NewValue)
 {
 	if (!StatusComponent || !ProgressBar || !TextBarValue)
 		return;
@@ -51,6 +42,6 @@ void UStatusBar::UpdateBarValue(float OldValue, float NewValue)
 
 	ProgressBar->SetPercent(Normalized);
 
-	FString Text = FString::Printf(TEXT("%.1f / %.1f"), NewValue, Max);
+	const FString Text = FString::Printf(TEXT("%.0f / %.0f"), NewValue, Max);
 	TextBarValue->SetText(FText::FromString(Text));
 }

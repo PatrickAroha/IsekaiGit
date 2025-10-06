@@ -5,7 +5,6 @@
 #include "Isekai/AtributesSystem/AttributesTypes.h"
 #include "StatusBar.generated.h"
 
-enum class EAtributeType : uint8;
 class UProgressBar;
 class UTextBlock;
 class UStatusComponent;
@@ -16,7 +15,11 @@ class ISEKAI_API UStatusBar : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	UFUNCTION()
 	virtual void NativeConstruct() override;
+
+	UFUNCTION()
+	void OnAttributeUpdated(EAtributeType Atribute, float NewValue);
 
 protected:
 
@@ -29,9 +32,11 @@ protected:
 	UPROPERTY()
 	UStatusComponent* StatusComponent;
 
+	// Tipo de atributo (definido em cada BP da barra)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Status")
 	EAtributeType AtributeType;
-	
+
+	// Atualiza visualmente a barra e o texto
 	UFUNCTION()
-	void UpdateBarValue(float OldValue, float NewValue);
+	void UpdateBarValue(float NewValue);
 };

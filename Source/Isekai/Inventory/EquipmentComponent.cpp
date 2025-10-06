@@ -38,7 +38,7 @@ void UEquipmentComponent::EquipItem(FItemSlot& ItemSlot, int32 SlotIndex)
 		{
 			for (const TPair<EAtributeType, float>& Bonus : ItemSlots[SlotIndex].Item->AttributeBonus)
 			{
-				Atribs->AddBonusValue(Bonus.Key, Bonus.Value);
+				Atribs->ChangeBonusValue(Bonus.Key, Bonus.Value);
 			}
 
 			if (ItemSlot.Item && ItemSlot.Item->Type == EItemCategory::Consumable)
@@ -61,14 +61,13 @@ void UEquipmentComponent::UnequipItem(int32 SlotIndex)
 			{
 				for (const TPair<EAtributeType, float>& Bonus : ItemSlots[SlotIndex].Item->AttributeBonus)
 				{
-					Atribs->RemoveValue(Bonus.Key, Bonus.Value);
+					Atribs->ChangeBonusValue(Bonus.Key, -Bonus.Value);
 				}
 			}
 
+			if (ItemSlots[SlotIndex].Item && ItemSlots[SlotIndex].Item->Type == EItemCategory::Consumable &&  ItemSlots[SlotIndex].Item == ItemEquiped.Item) NextEquipItem();
 			ItemEquiped.Item = nullptr;
 			ItemEquiped.Quantity = 0;
-			EquipPotion(ItemEquiped, SlotIndex);
-			
 		}
 	}
 }
@@ -177,12 +176,14 @@ void UEquipmentComponent::Use()
 	{
 		if (Player->StatusComponent)
 		{
-			PotionSlot.Item->ItemLogic->Use(Cast<AIsekaiCharacter>(GetOwner()));
+			bool CanUse = PotionSlot.Item->ItemLogic->Use(Cast<AIsekaiCharacter>(GetOwner()));
 
-			if (ItemSlots[PotionEquipIndex].Quantity <= 1) ClearSlot(PotionEquipIndex);
+			if (CanUse)
+			{
+				if (ItemSlots[PotionEquipIndex].Quantity <= 1) { ClearSlot(PotionEquipIndex); NextEquipItem(); }
 
-			else ItemSlots[PotionEquipIndex].Quantity--;
+				else ItemSlots[PotionEquipIndex].Quantity--;
+			}
 		}
 	}
 }
-

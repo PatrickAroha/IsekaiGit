@@ -72,37 +72,41 @@ void UDragToggle::DragToggleDrop(FKey MouseEvent, int32 NewIndex, UBaseInventory
 			{
 				if (HitWidget)
 				{
-					if (!NewInventoryComponent) return;
-
-					if (MouseEvent == EKeys::LeftMouseButton)
+					if (bIsSlotInventory)
 					{
+						if (!NewInventoryComponent) return;
+
+						if (MouseEvent == EKeys::LeftMouseButton)
+						{
 
 						
-						int32 DragQuantity = NewInventoryComponent->UpdateSlotLeftClick(ItemSlot, NewIndex, NewInventoryComponent);
+							int32 DragQuantity = NewInventoryComponent->UpdateSlotLeftClick(ItemSlot, NewIndex, NewInventoryComponent);
 						
-						if (DragQuantity <= 0) { DragToggleCancel(); return; }
+							if (DragQuantity <= 0) { DragToggleCancel(); return; }
 						
-						ItemSlot.Quantity = DragQuantity;
+							ItemSlot.Quantity = DragQuantity;
 						
-						if (DragWidget)
-							DragWidget->UpdateWidget(ItemSlot, DragQuantity);
+							if (DragWidget)
+								DragWidget->UpdateWidget(ItemSlot, DragQuantity);
 						
-						return;
+							return;
+						}
+
+						if (MouseEvent == EKeys::RightMouseButton)
+						{
+							int32 DragQuantity = NewInventoryComponent->UpdateSlotRightClick(ItemSlot, NewIndex, NewInventoryComponent);
+						
+							if (DragQuantity <= 0) { DragToggleCancel(); return; }
+						
+							ItemSlot.Quantity = DragQuantity;
+						
+							if (DragWidget)
+								DragWidget->UpdateWidget(ItemSlot, DragQuantity);
+
+							return;
+						}
 					}
-
-					if (MouseEvent == EKeys::RightMouseButton)
-					{
-						int32 DragQuantity = NewInventoryComponent->UpdateSlotRightClick(ItemSlot, NewIndex, NewInventoryComponent);
-						
-						if (DragQuantity <= 0) { DragToggleCancel(); return; }
-						
-						ItemSlot.Quantity = DragQuantity;
-						
-						if (DragWidget)
-							DragWidget->UpdateWidget(ItemSlot, DragQuantity);
-
-						return;
-					}
+					return;
 				}
 			}
 				if (APawn* Pawn = PC->GetPawn())

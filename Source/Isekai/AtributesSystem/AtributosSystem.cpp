@@ -10,7 +10,7 @@ UAtributosSystem::UAtributosSystem()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UAtributosSystem::SetValue(EAtributeType Atribute, int32 NewValue)
+void UAtributosSystem::SetValue(EAtributeType Atribute, float NewValue)
 {
 	if (Attributes.Contains(Atribute))
 		Attributes[Atribute] = NewValue;
@@ -18,46 +18,18 @@ void UAtributosSystem::SetValue(EAtributeType Atribute, int32 NewValue)
 	OnAttributesUpdated.Broadcast(this, Atribute, NewValue);
 }
 
-void UAtributosSystem::AddBonusValue(EAtributeType Atribute, float Amount)
+void UAtributosSystem::ChangeBonusValue(EAtributeType Atribute, float Amount)
 {
+	
 	if (!Attributes.Contains(Atribute)) return;
 	
-	if (Amount > 1)
-	{
-		Attributes[Atribute] += Amount;
-		OnAttributesUpdated.Broadcast(this, Atribute, Amount);
-	}
-	else
-	{
-		if (BaseAttributes.Contains(Atribute))
-		{
-			Attributes[Atribute] +=  BaseAttributes[Atribute] * Amount;
-			OnAttributesUpdated.Broadcast(this, Atribute, Amount);
-		}
-	}
+	Attributes[Atribute] += Amount;
+
+	OnAttributesUpdated.Broadcast(this, Atribute, Amount);
+	
 }
 
-void UAtributosSystem::RemoveValue(EAtributeType Atribute, float Amount)
-{
-	if (!Attributes.Contains(Atribute)) return;
-
-	if (Amount > 1)
-	{
-		Attributes[Atribute] = FMath::Max(0.0f, Attributes[Atribute] - Amount);
-		OnAttributesUpdated.Broadcast(this, Atribute, -Amount);
-	}
-	else
-	{
-		if (BaseAttributes.Contains(Atribute))
-		{
-			float RemoveAmount = BaseAttributes[Atribute] * Amount;
-			Attributes[Atribute] = FMath::Max(0.0f, Attributes[Atribute] - RemoveAmount);
-			OnAttributesUpdated.Broadcast(this, Atribute, -RemoveAmount);
-		}
-	}
-}
-
-int32 UAtributosSystem::GetValue(EAtributeType Atribute) const
+float UAtributosSystem::GetValue(EAtributeType Atribute) const
 {
 	if (Attributes.Contains(Atribute))
 		return Attributes[Atribute];
@@ -66,9 +38,10 @@ int32 UAtributosSystem::GetValue(EAtributeType Atribute) const
 
 void UAtributosSystem::BeginPlay()
 {
-	BaseAttributes = Attributes;
 	Super::BeginPlay();
-
+	
+	BaseAttributes = Attributes;
+	
 	if (AActor* Owner = GetOwner())
 	{
 		if (ULevelComponent* LevelComp = Owner->FindComponentByClass<ULevelComponent>())
@@ -80,8 +53,8 @@ void UAtributosSystem::BeginPlay()
 
 void UAtributosSystem::HandleLevelUp(int32 NewLevel)
 {
-
-	AddBonusValue(EAtributeType::Attack, 10);
+	
+	ChangeBonusValue(EAtributeType::Attack, 10);
 	
 }
 

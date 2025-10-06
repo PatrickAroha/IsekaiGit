@@ -3,6 +3,7 @@
 
 #include "ObjectItemBase.h"
 
-void UObjectItemBase::Use_Implementation(AIsekaiCharacter* Player)
+bool UObjectItemBase::Use_Implementation(AIsekaiCharacter* Player)
 {
+	return false;
 }

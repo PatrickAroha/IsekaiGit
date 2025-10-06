@@ -2,13 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "AtributosSystem.h"          // seu componente de máximos (int32) + EAtributeType
+#include "AtributosSystem.h"
 #include "StatusComponent.generated.h"
 
-// ===== Delegates =====
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChangedSignature,  float, OldValue, float, NewValue);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStaminaChangedSignature, float, OldValue, float, NewValue);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnManaChangedSignature,    float, OldValue, float, NewValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAttributeChangedSignature, EAtributeType, Atribute, float, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDiedSignature);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -20,21 +17,19 @@ public:
     UStatusComponent();
 
 protected:
-    
     virtual void BeginPlay() override;
-    
+
     UFUNCTION()
     void HandleAttributesUpdated(UAtributosSystem* AtribComp, EAtributeType Atribute, float Amount);
-    
-    void ApplyDeath();
 
+    void ApplyDeath();
 
 public:
 
     UPROPERTY()
     UAtributosSystem* AtributosSystem = nullptr;
 
-
+    // ======== Valores atuais ========
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Status")
     float Health = 0.f;
 
@@ -43,49 +38,27 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Status")
     float Mana = 0.f;
-    
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Status")
     bool bDied = false;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Status")
-    TMap<EAtributeType, int32> BaseAttributes;
+    TMap<EAtributeType, float> BaseAttributes;
 
+    // ======== Delegates ========
     UPROPERTY(BlueprintAssignable, Category="Status")
-    FOnHealthChangedSignature OnHealthChanged;
-
-    UPROPERTY(BlueprintAssignable, Category="Status")
-    FOnStaminaChangedSignature OnStaminaChanged;
-
-    UPROPERTY(BlueprintAssignable, Category="Status")
-    FOnManaChangedSignature OnManaChanged;
+    FOnAttributeChangedSignature OnAttributeChanged;
 
     UPROPERTY(BlueprintAssignable, Category="Status")
     FOnDiedSignature OnDied;
 
-    // ===== API =====
+    // ======== API ========
     UFUNCTION(BlueprintCallable, Category="Status")
-    void SubtractHealth(float Value, EAtributeType Atribute);
-
-    UFUNCTION(BlueprintCallable, Category="Status")
-    void AddHealth(float Value, EAtributeType Atribute);
-
-    UFUNCTION(BlueprintCallable, Category="Status")
-    void SubtractStamina(float Value);
-    
-    UFUNCTION(BlueprintCallable, Category="Status")
-    void AddStamina(float Value);
-
-    UFUNCTION(BlueprintCallable, Category="Status")
-    void SubtractMana(float Value);
-
-    UFUNCTION(BlueprintCallable, Category="Status")
-    void AddMana(float Value);
-
-    UFUNCTION(BlueprintPure, Category="Status")
-    float GetNormalizedHealth() const;
+    void ModifyAttributeValue(float Value, EAtributeType Atribute);
 
     UFUNCTION(BlueprintPure, Category="Status")
     bool IsDead() const { return bDied; }
 
+    UFUNCTION(BlueprintCallable, Category="Status")
     float GetMax(EAtributeType Type) const;
 };

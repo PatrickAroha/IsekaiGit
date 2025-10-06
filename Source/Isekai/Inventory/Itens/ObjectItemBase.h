@@ -13,8 +13,9 @@ class ISEKAI_API UObjectItemBase : public UObject
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Item")
-	void Use(class AIsekaiCharacter* Player);
 
-	virtual void Use_Implementation(AIsekaiCharacter* Player);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Item")
+	bool Use(class AIsekaiCharacter* Player);
+	virtual bool Use_Implementation(AIsekaiCharacter* Player);
+	
 };

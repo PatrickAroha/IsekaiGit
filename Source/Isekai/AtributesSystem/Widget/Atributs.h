@@ -6,6 +6,8 @@
 #include "Isekai/AtributesSystem/AtributosSystem.h"
 #include "Atributs.generated.h"
 
+class AIsekaiCharacter;
+
 UCLASS()
 class ISEKAI_API UAtributs : public UUserWidget
 {
@@ -40,9 +42,21 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* DodgeText;
 
+	UPROPERTY(BlueprintReadWrite)
+	int32 UpgradeStatusLevel;
+
+	UPROPERTY(BlueprintReadWrite)
+	UAtributosSystem* AtribComponent;
+
+	UPROPERTY(BlueprintReadWrite)
+	AIsekaiCharacter* Player;
+	
 	UFUNCTION()
 	void UpdateAttributes(UAtributosSystem* AtribComp, EAtributeType Atribute, float Amount);
 
+	UFUNCTION(BlueprintCallable)
+	void UpdateAtributeLevel(EAtributeType Atribute);
+	
 	virtual void NativeConstruct() override;
 	
 };

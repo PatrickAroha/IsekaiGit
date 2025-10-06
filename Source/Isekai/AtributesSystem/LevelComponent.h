@@ -15,14 +15,13 @@ class ISEKAI_API ULevelComponent : public UActorComponent
 
 public:
 	ULevelComponent();
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Level")
+	int32 CurrentLevel = 1;
 protected:
 	virtual void BeginPlay() override;
 
 	// ========= PROPRIEDADES =========
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Level")
-	int32 CurrentLevel = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Level")
 	float CurrentXP = 0.0f;
@@ -33,6 +32,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Level")
 	float BaseXP = 100.0f; // XP base para a fórmula
 
+	
 public:
 	// ========= FUNÇÕES =========
 
@@ -61,6 +61,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Level")
 	FOnLevelUp OnLevelUp;
 
+	UPROPERTY(BlueprintReadWrite)
+	int32 QuantityUpgradeLevel = 1;
+	
 private:
 	void LevelUp();
 	float CalculateNextXPRequirement() const;

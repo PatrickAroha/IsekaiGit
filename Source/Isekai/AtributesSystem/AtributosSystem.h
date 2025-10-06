@@ -17,13 +17,11 @@ public:
 	
 	UAtributosSystem();
 	
-	void SetValue(EAtributeType Atribute, int32 NewValue);
+	void SetValue(EAtributeType Atribute, float NewValue);
 	
-	void AddBonusValue(EAtributeType Atribute, float Amount);
+	void ChangeBonusValue(EAtributeType Atribute, float Amount);
 	
-	void RemoveValue(EAtributeType Atribute, float Amount);
-	
-	int32 GetValue(EAtributeType Atribute) const;
+	float GetValue(EAtributeType Atribute) const;
 	
 	virtual void BeginPlay() override;
 
@@ -36,10 +34,10 @@ public:
 	FOnAttributesUpdated OnAttributesUpdated;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AtributesStatus")
-	TMap<EAtributeType, int32> Attributes;
+	TMap<EAtributeType, float> Attributes;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AtributesStatus")
-	TMap<EAtributeType, int32> BaseAttributes;
+	TMap<EAtributeType, float> BaseAttributes;
 
 	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
