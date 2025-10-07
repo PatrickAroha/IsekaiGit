@@ -23,16 +23,16 @@ class ISEKAI_API UPDA_CraftItem : public UPrimaryDataAsset
 
 public:
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FItemSlot> CraftRequeriments;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FItemSlot CraftResult;
     
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     ECraftingStation CraftTableType;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     EItemCategory ItemType;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Craft")
