@@ -13,5 +13,5 @@ enum class EAtributeType : uint8
 	Defense,
 	Velocity,
 	Jump,
-	Dodge
+	Dodge,
 };

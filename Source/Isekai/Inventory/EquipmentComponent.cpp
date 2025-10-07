@@ -41,7 +41,7 @@ void UEquipmentComponent::EquipItem(FItemSlot& ItemSlot, int32 SlotIndex)
 				Atribs->ChangeBonusValue(Bonus.Key, Bonus.Value);
 			}
 
-			if (ItemSlot.Item && ItemSlot.Item->Type == EItemCategory::Consumable)
+			if (ItemSlot.Item && ItemSlot.Item->Type == EItemCategory::Consumable && ItemEquiped.Item == nullptr)
 			{
 				EquipPotion(ItemSlot, SlotIndex);
 			}

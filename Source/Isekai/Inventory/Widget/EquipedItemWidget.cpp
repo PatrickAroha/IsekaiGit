@@ -12,8 +12,7 @@ void UEquipedItemWidget::NativeConstruct()
 			if (EquipmentComponent)
 			{
 				EquipmentComponent->OnPotionChanged.AddDynamic(this, &UEquipedItemWidget::UpdateWidget);
-
-				// já mostra o item inicial, se existir
+				
 				if (EquipmentComponent->ItemEquiped.Item)
 				{
 					UpdateWidget(EquipmentComponent->ItemEquiped);

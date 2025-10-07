@@ -53,9 +53,15 @@ void UAtributosSystem::BeginPlay()
 
 void UAtributosSystem::HandleLevelUp(int32 NewLevel)
 {
-	
+	ChangeBonusValue(EAtributeType::Vida, 10);
+	ChangeBonusValue(EAtributeType::Mana, 10);
+	ChangeBonusValue(EAtributeType::Stamina, 10);
 	ChangeBonusValue(EAtributeType::Attack, 10);
-	
+	ChangeBonusValue(EAtributeType::Defense, 10);
+	ChangeBonusValue(EAtributeType::Power, 10);
+	ChangeBonusValue(EAtributeType::Velocity, 10);
+	ChangeBonusValue(EAtributeType::Dodge, 10);
+	ChangeBonusValue(EAtributeType::Jump, 10);
 }
 
 void UAtributosSystem::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
