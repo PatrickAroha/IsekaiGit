@@ -42,7 +42,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "UI | Inventory")
 	TSubclassOf<UUserWidget> DragGhostClass;
 
-	UPROPERTY(BlueprintReadOnly, Category = "UI | Inventory", meta = (ExposeOnSpawn))
+	UPROPERTY(BlueprintReadWrite, Category = "UI | Inventory", meta = (ExposeOnSpawn))
 	UInventoryComponent* InventoryComponent;
 
 	UPROPERTY(BlueprintReadOnly, Category = "UI | Inventory", meta = (ExposeOnSpawn))

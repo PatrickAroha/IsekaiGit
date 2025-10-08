@@ -13,6 +13,7 @@
 #include "InputActionValue.h"
 #include "VectorUtil.h"
 #include "Blueprint/UserWidget.h"
+#include "Engine/AssetManager.h"
 #include "Isekai/AtributesSystem/AtributosSystem.h"
 #include "Isekai/AtributesSystem/StatusComponent.h"
 #include "Isekai/Core/PlayerHUD.h"
@@ -227,3 +228,4 @@ void AIsekaiCharacter::UseEquipPotion()
 		}
 	}
 }
+

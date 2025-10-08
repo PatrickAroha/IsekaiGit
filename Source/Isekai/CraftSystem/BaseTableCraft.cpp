@@ -1,5 +1,8 @@
 #include "BaseTableCraft.h"
+#include "CraftWidget.h"
+#include "Components/ScrollBox.h"
 #include "Engine/AssetManager.h"
+#include "Slate/SGameLayerManager.h"
 
 
 ABaseTableCraft::ABaseTableCraft(): CraftingStationType()
@@ -59,16 +62,64 @@ void ABaseTableCraft::OnAssetLoaded()
 void ABaseTableCraft::Interact_Implementation(AIsekaiCharacter* Player)
 {
 
-	UE_LOG(LogTemp, Warning, TEXT("[Craft] Interagindo com bancada: %s"), *UEnum::GetValueAsString(CraftingStationType));
+	if (!CraftWidgetClass) return;
 
-	// Exemplo: mostrar receitas disponíveis
-	for (UPDA_CraftItem* Recipe : AvailableRecipes)
-	{
-		if (!Recipe) continue;
-
-		UE_LOG(LogTemp, Warning, TEXT("[Craft] Receita disponível: %s (Resultado: %s)"),
-			*Recipe->GetName(),
-			*Recipe->CraftResult.Item->GetName());
-	}
+	PlayerUnlockedCrafts = 	Player->UnlockedCrafts;
 	
+	UCraftWidget* CraftUI = CreateWidget<UCraftWidget>(GetWorld(), CraftWidgetClass);
+	
+	CraftUI->InventoryComponent = Player->InventoryComponent;
+	
+	ExposeUnlockedCrafts(CraftUI);
+	
+	if (CraftUI)
+	{
+		CraftUI->AddToViewport();
+
+		APlayerController* PC = GetWorld()->GetFirstPlayerController();
+		if (PC)
+		{
+			PC->bShowMouseCursor = true;
+			FInputModeUIOnly InputMode;
+			InputMode.SetWidgetToFocus(CraftUI->TakeWidget());
+			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+			PC->SetInputMode(InputMode);
+		}
+	}
+}
+
+void ABaseTableCraft::BeginFocus_Implementation()
+{
+	IInteractInterface::BeginFocus_Implementation();
+
+	if (TableMesh)
+	{
+		TableMesh->SetRenderCustomDepth(true);
+	}
+}
+
+void ABaseTableCraft::EndFocus_Implementation()
+{
+	if (TableMesh)
+	{
+		TableMesh->SetRenderCustomDepth(false);
+	}
+}
+
+void ABaseTableCraft::ExposeUnlockedCrafts(UCraftWidget* CraftUI)
+{
+	if (!PlayerUnlockedCrafts.IsEmpty())
+	{
+		for (int32 i = 0; i < AvailableRecipes.Num(); i++)
+		{
+			if (AvailableRecipes[i]->CraftTableType == CraftingStationType)
+			{
+				if (PlayerUnlockedCrafts.Contains(AvailableRecipes[i]->Item) && PlayerUnlockedCrafts[AvailableRecipes[i]->Item])
+				{
+					CraftUI->UnlockedsRecipes.AddUnique(AvailableRecipes[i]);
+				}
+			}
+		}
+		CraftUI->OnRecipesReceived();
+	}
 }

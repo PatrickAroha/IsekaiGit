@@ -117,15 +117,30 @@ void UInventoryComponent::DropItem(int32 Index, int32 Quantity)
 	}
 }
 
-void UInventoryComponent::SearchItem(UPDA_Master* ItemInfo)
+bool UInventoryComponent::HasRequiredItems(const TArray<FItemSlot>& RequiredItems)
 {
-	for (FItemSlot& Slots : ItemSlots)
+	if (ItemSlots.IsEmpty()) 
+		return false;
+
+	for (const FItemSlot& Required : RequiredItems)
 	{
-		if (Slots.Item->ID == ItemInfo->ID)
+		int32 TotalQuantity = 0;
+
+		for (const FItemSlot& Slot : ItemSlots)
 		{
-			
+			if (Slot.Item && Slot.Item->ID == Required.Item->ID)
+			{
+				TotalQuantity += Slot.Quantity;
+			}
+		}
+
+		if (TotalQuantity < Required.Quantity)
+		{
+			return false;
 		}
 	}
+
+	return true;
 }
 
 void UInventoryComponent::ClearInventory()
@@ -155,3 +170,51 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
+void UInventoryComponent::MakeNewItem(TArray<FItemSlot> RequiredItems, FItemSlot NewItem)
+{
+	if (HasEmptySlot())
+	{
+		for (FItemSlot& Slot : RequiredItems)
+		{
+			RemoveItem(Slot);
+		}
+		AddStack(NewItem.Item, NewItem.Quantity);
+	}
+}
+
+bool UInventoryComponent::HasEmptySlot()
+{
+	for (FItemSlot& Slots : ItemSlots)
+	{
+		if (Slots.Item == nullptr)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void UInventoryComponent::RemoveItem(FItemSlot Item)
+{
+	int32 RemoveQuantity = Item.Quantity;
+
+	for (FItemSlot& Slot : ItemSlots)
+	{
+		if (Slot.Item && Slot.Item->ID == Item.Item->ID)
+		{
+			if (RemoveQuantity <= 0) return;
+			
+			if (Slot.Item && Slot.Quantity >= RemoveQuantity)
+			{
+				Slot.Quantity -= RemoveQuantity;
+				if (Slot.Quantity == 0) Slot.Item = nullptr;
+				return;
+			}
+			
+			RemoveQuantity -= Slot.Quantity;
+			Slot.Item = nullptr;
+			Slot.Quantity = 0;
+		}
+	}
+}

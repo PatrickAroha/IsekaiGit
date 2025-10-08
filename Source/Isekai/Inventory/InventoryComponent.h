@@ -37,11 +37,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DropItem(int32 Index, int32 Quantity);
 
-	void SearchItem(UPDA_Master* ItemInfo);
+	UFUNCTION(BlueprintCallable)
+	bool HasRequiredItems(const TArray<FItemSlot>& RequiredItems);
+
+	UFUNCTION(BlueprintCallable)
+	void MakeNewItem(TArray<FItemSlot> RequiredItems, FItemSlot NewItem);
+
+	void RemoveItem(FItemSlot Item);
 	
+	bool HasEmptySlot();
+
 	void ClearInventory();
 
-	
 protected:
 
 	virtual void BeginPlay() override;

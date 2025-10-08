@@ -37,4 +37,10 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Craft")
     FName Item;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Craft")
+    int32 Quantity;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Craft")
+    UTexture2D* ItemIcon;
 };

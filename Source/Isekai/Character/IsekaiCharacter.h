@@ -90,6 +90,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	ULevelComponent* LevelComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Craft")
+	TMap<FName, bool> UnlockedCrafts;
+
 	
 	AIsekaiCharacter();
 
@@ -108,7 +112,9 @@ protected:
 	void ClearInventory();
 
 	virtual void Tick(float DeltaSeconds) override;
+	
 	void NextPotionInput();
+	
 	void UseEquipPotion();
 
 	virtual void NotifyControllerChanged() override;
