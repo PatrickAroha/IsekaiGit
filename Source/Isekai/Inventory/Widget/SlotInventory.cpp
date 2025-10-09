@@ -28,4 +28,7 @@ void USlotInventory::UpdateSlot()
 			Quantity = 0;
 			ItemInfo = nullptr;
 		}
+
+	
+	
 }

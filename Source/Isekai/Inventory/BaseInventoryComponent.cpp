@@ -74,3 +74,8 @@ void UBaseInventoryComponent::ClearSlot(int32 Index)
 	ItemSlots[Index].Quantity = 0;
 }
 
+void UBaseInventoryComponent::InventoryUpdated()
+{
+	OnInventoryUpdated.Broadcast();
+}
+

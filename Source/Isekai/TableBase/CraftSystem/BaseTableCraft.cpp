@@ -1,16 +1,10 @@
 #include "BaseTableCraft.h"
 #include "CraftWidget.h"
-#include "Components/ScrollBox.h"
 #include "Engine/AssetManager.h"
-#include "Slate/SGameLayerManager.h"
 
 
-ABaseTableCraft::ABaseTableCraft(): CraftingStationType()
+ABaseTableCraft::ABaseTableCraft(): CraftingStationType(), AssetLoadingHandle(nullptr)
 {
-	PrimaryActorTick.bCanEverTick = false;
-
-	TableMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TableMesh"));
-	RootComponent = TableMesh;
 }
 
 void ABaseTableCraft::BeginPlay()
@@ -18,7 +12,6 @@ void ABaseTableCraft::BeginPlay()
 	Super::BeginPlay();
 	
 	LoadCraftRecipes();
-	
 }
 
 void ABaseTableCraft::LoadCraftRecipes()
@@ -59,53 +52,6 @@ void ABaseTableCraft::OnAssetLoaded()
 	
 }
 
-void ABaseTableCraft::Interact_Implementation(AIsekaiCharacter* Player)
-{
-
-	if (!CraftWidgetClass) return;
-
-	PlayerUnlockedCrafts = 	Player->UnlockedCrafts;
-	
-	UCraftWidget* CraftUI = CreateWidget<UCraftWidget>(GetWorld(), CraftWidgetClass);
-	
-	CraftUI->InventoryComponent = Player->InventoryComponent;
-	
-	ExposeUnlockedCrafts(CraftUI);
-	
-	if (CraftUI)
-	{
-		CraftUI->AddToViewport();
-
-		APlayerController* PC = GetWorld()->GetFirstPlayerController();
-		if (PC)
-		{
-			PC->bShowMouseCursor = true;
-			FInputModeUIOnly InputMode;
-			InputMode.SetWidgetToFocus(CraftUI->TakeWidget());
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			PC->SetInputMode(InputMode);
-		}
-	}
-}
-
-void ABaseTableCraft::BeginFocus_Implementation()
-{
-	IInteractInterface::BeginFocus_Implementation();
-
-	if (TableMesh)
-	{
-		TableMesh->SetRenderCustomDepth(true);
-	}
-}
-
-void ABaseTableCraft::EndFocus_Implementation()
-{
-	if (TableMesh)
-	{
-		TableMesh->SetRenderCustomDepth(false);
-	}
-}
-
 void ABaseTableCraft::ExposeUnlockedCrafts(UCraftWidget* CraftUI)
 {
 	if (!PlayerUnlockedCrafts.IsEmpty())
@@ -123,3 +69,32 @@ void ABaseTableCraft::ExposeUnlockedCrafts(UCraftWidget* CraftUI)
 		CraftUI->OnRecipesReceived();
 	}
 }
+
+void ABaseTableCraft::Interact_Implementation(AIsekaiCharacter* Player)
+{
+	if (!WidgetClass) return;
+
+	PlayerUnlockedCrafts = 	Player->UnlockedCrafts;
+	
+	UCraftWidget* CraftUI = CreateWidget<UCraftWidget>(GetWorld(), WidgetClass);
+	
+	CraftUI->InventoryComponent = Player->InventoryComponent;
+	
+	ExposeUnlockedCrafts(CraftUI);
+	
+	if (CraftUI)
+	{
+		CraftUI->AddToViewport();
+	}
+}
+
+void ABaseTableCraft::BeginFocus_Implementation()
+{
+	Super::BeginFocus_Implementation();
+}
+
+void ABaseTableCraft::EndFocus_Implementation()
+{
+	Super::EndFocus_Implementation();
+}
+

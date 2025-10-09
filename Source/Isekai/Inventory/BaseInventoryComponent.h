@@ -4,6 +4,7 @@
 #include "Components/ActorComponent.h"
 #include "BaseInventoryComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
 
 struct FItemSlot;
 
@@ -36,6 +37,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void ClearSlot(int32 Index);
 
+	UPROPERTY(BlueprintAssignable, Category="Inventory")
+	FOnInventoryUpdated OnInventoryUpdated;
+
 	UFUNCTION(BlueprintCallable)
 	virtual void Use() {}
+
+	UFUNCTION(BlueprintCallable)
+	virtual void InventoryUpdated();
 };

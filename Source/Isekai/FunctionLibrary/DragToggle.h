@@ -16,7 +16,7 @@ class ISEKAI_API UDragToggle : public ULocalPlayerSubsystem, public FTickableGam
 
 public:
 	UFUNCTION(BlueprintCallable, Category="Drag")
-	void DragToggleStart(UDragWidget* GetDragWidget, UBaseInventoryComponent* InventoryComponent,  FKey MouseButton);
+	void DragToggleStart(UDragWidget* GetDragWidget, UBaseInventoryComponent* InventoryComponent,  FKey MouseButton, int32 IndexRemoveItemCopy);
 	
 	UFUNCTION(BlueprintCallable, Category="Drag")
 	void DragToggleDrop(FKey MouseEvent, int32 NewIndex, UBaseInventoryComponent* NewInventoryComponent);
@@ -41,6 +41,10 @@ public:
 	
 	virtual	void Tick(float DeltaTime) override;
 	virtual TStatId GetStatId() const override;
+
+	UFUNCTION(BlueprintCallable, Category="Drag")
+	void ReturnItemToSlot();
+	
 	virtual bool IsTickable() const override { return true; }
 
 public:
@@ -68,6 +72,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Character | Interaction")
 	TScriptInterface<IInteractInterface> TargetInteractable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 IndexRemoveItem;
 	
 };
 

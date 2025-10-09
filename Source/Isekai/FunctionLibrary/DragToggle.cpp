@@ -16,8 +16,10 @@
 #include "Isekai/Inventory/Itens/BaseItem.h"
 #include "Isekai/Inventory/Widget/DragWidget.h"
 
-void UDragToggle::DragToggleStart(UDragWidget* GetDragWidget, UBaseInventoryComponent* InventoryComponent, FKey MouseButton)
+void UDragToggle::DragToggleStart(UDragWidget* GetDragWidget, UBaseInventoryComponent* InventoryComponent, FKey MouseButton, int32 IndexRemoveItemCopy)
 {
+
+	IndexRemoveItem = IndexRemoveItemCopy;
 	
 	if (GetDragWidget->ItemSlot.Quantity <= 0)
 	{
@@ -220,3 +222,45 @@ TStatId UDragToggle::GetStatId() const
 {
 	RETURN_QUICK_DECLARE_CYCLE_STAT(UDragToggle, STATGROUP_Tickables);
 }
+
+void UDragToggle::ReturnItemToSlot()
+{
+
+		if (GetInventoryComponent->ItemSlots[IndexRemoveItem].Item == nullptr)
+		{
+			GetInventoryComponent->ItemSlots[IndexRemoveItem].Item = ItemSlot.Item;
+			GetInventoryComponent->ItemSlots[IndexRemoveItem].Quantity = ItemSlot.Quantity;
+			DragToggleCancel();
+			return;
+		}
+		if (APlayerController* PC = GetLocalPlayer()->GetPlayerController(GetWorld()))
+		{
+			if (APawn* Pawn = PC->GetPawn())
+			{
+				if (ACharacter* OwnerChar = Cast<ACharacter>(Pawn))
+				{
+					FVector DropLocation = OwnerChar->GetActorLocation() + OwnerChar->GetActorForwardVector() * 100.f;
+					FActorSpawnParameters Params;
+
+					if (ABaseItem* DroppedItem = GetWorld()->SpawnActor<ABaseItem>(
+						ABaseItem::StaticClass(),
+						DropLocation,
+						FRotator::ZeroRotator,
+						Params))
+					{
+						DroppedItem->ItemInfo = ItemSlot.Item;
+						DroppedItem->Quantity = ItemSlot.Quantity;
+
+						if (DroppedItem->ItemInfo && DroppedItem->ItemInfo->WorldMesh)
+						{
+							if (UStaticMeshComponent* Mesh = DroppedItem->FindComponentByClass<UStaticMeshComponent>())
+							{
+								Mesh->SetStaticMesh(DroppedItem->ItemInfo->WorldMesh);
+								DragToggleCancel();
+							}
+						}
+					}
+				}
+			}
+		}
+	}

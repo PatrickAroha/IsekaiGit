@@ -3,14 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Isekai/TableBase/TableBase.h"
 #include "GameFramework/Actor.h"
-#include "Isekai/CraftSystem/PDA_CraftItem.h"
+#include "Isekai/TableBase/CraftSystem/PDA_CraftItem.h"
 #include "BaseTableCraft.generated.h"
 
 class UCraftWidget;
 
 UCLASS()
-class ISEKAI_API ABaseTableCraft : public AActor, public IInteractInterface
+class ISEKAI_API ABaseTableCraft : public ATableBase
 {
 	GENERATED_BODY()
 
@@ -23,15 +24,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Craft")
 	TArray<UPDA_CraftItem*> AvailableRecipes;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Craft|Mesh")
-	UStaticMeshComponent* TableMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Craft|Mesh")
 	FPrimaryAssetType PrimaryPDACraft;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Craft|UI")
-	TSubclassOf<UUserWidget> CraftWidgetClass;
 
 	TSharedPtr<FStreamableHandle> AssetLoadingHandle;
 
