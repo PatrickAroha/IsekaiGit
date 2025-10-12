@@ -22,20 +22,20 @@ public:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemData")
 //	TArray<FItemSlot> ItemSlots;
 
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int32 InventorySize = 6;
 	
-	
-	int32 AddItem(UPDA_Master* ItemData, int32 Quantity);
+	virtual int32 AddItem(UPDA_Master*, int32);
 
-	int AddStack(UPDA_Master* ItemData, int32 Quantity);
+	int AddStack(UPDA_Master*, int32);
 
-	int32 AddUnique(UPDA_Master* ItemData, int32 Quantity);
+	int32 AddUnique(UPDA_Master*, int32);
 
-	int NewStack(UPDA_Master* ItemData, int32 Quantity);
+	int NewStack(UPDA_Master* , int32);
 
 	UFUNCTION(BlueprintCallable)
-	void DropItem(int32 Index, int32 Quantity);
+	virtual void DropItem(int32 Index, int32 Quantity);
 
 	UFUNCTION(BlueprintCallable)
 	bool HasRequiredItems(const TArray<FItemSlot>& RequiredItems);

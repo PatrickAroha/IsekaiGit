@@ -95,9 +95,27 @@ public:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Stack", meta=(EditCondition="!bEquipable"))
     bool bStackable = true;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Stack", meta=(ClampMin="1", EditCondition="bStackable && !bEquipable", EditConditionHides))
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Stack", meta=(ClampMin="1", EditCondition="bStackable", EditConditionHides))
     int32 MaxStack = 5;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Furnace", meta=(EditCondition="Type==EItemCategory::Material", EditConditionHides))
+    bool bSmeltable = false;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Furnace", meta=(EditCondition="Type==EItemCategory::Material", EditConditionHides))
+    bool bFuel = false;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Furnace", meta=(EditCondition="bFuel", EditConditionHides))
+    int32 FuelEnergy = 0;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Furnace", meta=(EditCondition="bFuel", EditConditionHides))
+    int32 FuelPotency = 0;
+    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Furnace", meta=(EditCondition="bSmeltable", EditConditionHides))
+    int32 SmeltableDensity = 0;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Furnace", meta=(EditCondition="bSmeltable", EditConditionHides))
+    FItemSlot SmeltItemResult;
+    
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Visual")
     UStaticMesh* WorldMesh;
 

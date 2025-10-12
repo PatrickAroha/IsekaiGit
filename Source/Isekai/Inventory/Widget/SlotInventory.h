@@ -6,6 +6,8 @@
 #include "Components/TextBlock.h"
 #include "SlotInventory.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSlotUpdated);
+
 class UInventoryComponent;
 class UBaseInventoryComponent;
 class UPDA_Master;
@@ -16,6 +18,10 @@ class ISEKAI_API USlotInventory : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FOnSlotUpdated OnSlotUpdated;
+	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 SlotIndex;
 
@@ -42,4 +48,5 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateSlot();
+	void HasSlotInteract();
 };

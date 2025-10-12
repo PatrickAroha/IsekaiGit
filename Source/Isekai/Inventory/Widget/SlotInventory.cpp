@@ -3,6 +3,7 @@
 #include "Isekai/Inventory/PDA_Master.h"
 
 
+
 void USlotInventory::UpdateSlot()
 {
 	if (UBaseInventoryComponent* InventoryComponent = Cast<UBaseInventoryComponent>(OwnerInventory))
@@ -29,6 +30,7 @@ void USlotInventory::UpdateSlot()
 			ItemInfo = nullptr;
 		}
 
-	
+	OnSlotUpdated.Broadcast();
 	
 }
+
