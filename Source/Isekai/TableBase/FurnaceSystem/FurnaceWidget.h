@@ -55,5 +55,5 @@ public:
 
 	UFUNCTION() void UpdateFuelSlot() { InventoryComponent->UpdateItem(0); }
 	UFUNCTION() void UpdateSmeltSlot() { InventoryComponent->UpdateItem(1); }
-	UFUNCTION() void UpdateResultSlot() {  }
+	UFUNCTION() void UpdateResultSlot() { InventoryComponent->UpdateItem(2); }
 };

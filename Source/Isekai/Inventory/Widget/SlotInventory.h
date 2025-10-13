@@ -48,5 +48,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateSlot();
+	
 	void HasSlotInteract();
 };

@@ -18,7 +18,7 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnItemUpdated OnItemUpdated;
 	
-	virtual void DropItem(int32 Index, int32 Quantity);
+//	virtual void DropItem(int32 Index, int32 Quantity);
 	
 	UFurnaceInventoryComponent();
 
@@ -49,6 +49,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateItem(int32 SlotIndex);
+	
 	void SmeltableItem(int32 SlotIndex);
 	void FuelItem(int32 SlotIndex);
 	void FinishSmelting();
