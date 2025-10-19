@@ -16,6 +16,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Item")
 	bool Use(class AIsekaiCharacter* Player);
+
 	virtual bool Use_Implementation(AIsekaiCharacter* Player);
 	
 };
