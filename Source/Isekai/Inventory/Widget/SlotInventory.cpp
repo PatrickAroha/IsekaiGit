@@ -23,8 +23,8 @@ void USlotInventory::UpdateSlot()
 		}
 		else
 		{
-			ItemIconTexture = nullptr;
-			ItemIcon->SetBrushFromTexture(nullptr);
+			ItemIconTexture = EmptySlotTexture;
+			ItemIcon->SetBrushFromTexture(ItemIconTexture);
 			SlotIndexText->SetText(FText::GetEmpty());
 			Quantity = 0;
 			ItemInfo = nullptr;

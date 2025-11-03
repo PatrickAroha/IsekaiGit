@@ -1,27 +1,79 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// QuestProgressComponent.h
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameplayTagContainer.h"
+#include "PDA_MissionInfo.h"
 #include "MissionComponent.generated.h"
 
+class UQuestTargetRegistrySubsystem;
+
+UENUM(BlueprintType)
+enum class EQuestStatus : uint8
+{
+	InProgress,
+	Completed,
+	Failed
+};
+
+USTRUCT(BlueprintType)
+struct FObjectiveProgress {
+	GENERATED_BODY()
+
+	UPROPERTY()
+	EObjectiveType Type = EObjectiveType::Kill;
+	
+	UPROPERTY()
+	int32 CurrentCount = 0;
+
+	UPROPERTY()
+	bool bCompleted = false;
+
+	UPROPERTY()
+	FGameplayTag TargetTag;
+
+	UPROPERTY()
+	int32 RequiredAmount = 1;
+};
+
+USTRUCT(BlueprintType)
+struct FQuest
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TSoftObjectPtr<UPDA_MissionInfo> Data;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<FObjectiveProgress> Objectives;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	EQuestStatus Status = EQuestStatus::InProgress;
+};
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class ISEKAI_API UMissionComponent : public UActorComponent
+class UMissionComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
+	
 	UMissionComponent();
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 CurrentMainQuestIndex = 0;
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<FQuest> Quests;
 
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
+	UFUNCTION() void TryReciveQuest(const TArray<TSoftObjectPtr<UPDA_MissionInfo>>& MyData);
+	UFUNCTION() void ReciveQuest(const TArray<TSoftObjectPtr<UPDA_MissionInfo>>& MyData);
+	UFUNCTION() void TryProgressQuest(FGameplayTag EnemyTargetTag, EObjectiveType Type);
+	UFUNCTION() void TryCompleteQuest(FObjectiveProgress& Obj, FQuest& Quest);
+	UFUNCTION() void CompleteQuest(FQuest& Quest);
+	UFUNCTION() void ReciveBonus(FQuest& Quest);
+	UFUNCTION() void RemoveQuest(const FQuest& Quest);
+	UFUNCTION() void ReciveNewQuests(FQuest& Quest);
+	
 };

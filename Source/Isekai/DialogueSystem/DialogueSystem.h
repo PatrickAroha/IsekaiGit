@@ -55,9 +55,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DialogueSystem")
 	TSubclassOf<UBaseMessageWidget> MessageWidgetClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DialogueSystem")
-	TSubclassOf<UBaseDialogueWidgetFunction> FunctionWidgetClass;
 	
 	
 	UFUNCTION(BlueprintCallable, Category = "DialogueSystem")
@@ -71,9 +68,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "DialogueSystem")
 	void NextMenssage();
-
-	UFUNCTION(BlueprintCallable, Category = "DialogueSystem")
-	void DialogueFunction();
 
 	UFUNCTION(BlueprintCallable, Category = "DialogueSystem")
 	void OnDialogueEnded();

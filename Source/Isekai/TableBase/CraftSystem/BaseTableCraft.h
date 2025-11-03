@@ -36,10 +36,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Craft")
 	void LoadCraftRecipes();
 	void OnAssetLoaded();
+	void ExposeUnlockedCrafts(UCraftWidget* CraftUI);
 	virtual void Interact_Implementation(AIsekaiCharacter* Player) override;
 	virtual void BeginFocus_Implementation() override;
 	virtual void EndFocus_Implementation() override;
-	void ExposeUnlockedCrafts(UCraftWidget* CraftUI);
 
 protected:
 	

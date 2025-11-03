@@ -25,8 +25,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int32 InventorySize = 6;
-	
-	virtual int32 AddItem(UPDA_Master*, int32);
+
+	UFUNCTION(BlueprintCallable)
+	virtual int32 AddItem(UPDA_Master* ItemData, int32 Quantity);
 
 	int AddStack(UPDA_Master*, int32);
 
@@ -44,7 +45,8 @@ public:
 	void MakeNewItem(TArray<FItemSlot> RequiredItems, FItemSlot NewItem);
 
 	void RemoveItem(FItemSlot Item);
-	
+
+	UFUNCTION(BlueprintCallable)
 	bool HasEmptySlot();
 
 	void ClearInventory();

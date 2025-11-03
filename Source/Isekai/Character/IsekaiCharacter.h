@@ -5,9 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "Isekai/MissionsSystem/PDA_MissionInfo.h"
 #include "Isekai/Interfaces/InteractInterface.h"
 #include "Isekai/Inventory/Widget/BaseInventory.h"
 #include "IsekaiCharacter.generated.h"
+
 
 class ULevelComponent;
 class UStatusComponent;
@@ -94,6 +96,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Craft")
 	TMap<FName, bool> UnlockedCrafts;
 
+	UPROPERTY()
+	ERequiredRank Rank = ERequiredRank::None;
 	
 	AIsekaiCharacter();
 

@@ -16,10 +16,11 @@ void ABaseNPC::BeginPlay()
 
 }
 
-void ABaseNPC::Interact_Implementation(AIsekaiCharacter* Player)
+void ABaseNPC::Interact_Implementation(AIsekaiCharacter* MyPlayer)
 {
-	if (DialogueSystem && Player)
+	if (DialogueSystem && MyPlayer)
 	{
+		Player = MyPlayer;
 		DialogueSystem->StartDialogue(Player);
 	}
 }
@@ -39,4 +40,15 @@ void ABaseNPC::EndFocus_Implementation()
 	{
 		GetMesh()->SetRenderCustomDepth(false);
 	}
+}
+
+void ABaseNPC::ExecuteDialogueFunction()
+{
+	UNPCFunctions* Function = NewObject<UNPCFunctions>(this, FunctionClass);
+	Function->StartFunction(Player, this);
+}
+
+void ABaseNPC::OnDialogueEnded()
+{
+	DialogueSystem->NextMenssage();
 }

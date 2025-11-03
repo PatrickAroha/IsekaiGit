@@ -1,7 +1,7 @@
 #include "DialogueSystem.h"
-#include "BaseDialogueWidgetFunction.h"
 #include "BaseMessageWidget.h"
 #include "Blueprint/UserWidget.h"
+#include "Isekai/BaseNPC/BaseNPC.h"
 #include "Isekai/Character/IsekaiCharacter.h"
 
 UDialogueSystem::UDialogueSystem()
@@ -33,7 +33,7 @@ void UDialogueSystem::NextMenssage()
 {
 
 	if (MessageCounter + 1 == FunctionMessage && !DidOnce && FunctionMessage != -1)
-		{ DidOnce = true; GenerateMessageWidget(true); DialogueFunction(); return; }
+		{ DidOnce = true; GenerateMessageWidget(true); Cast<ABaseNPC>(GetOwner())->ExecuteDialogueFunction(); return; }
 
 	if (HasInteracted && MessageCounter + 1 < MaxMessage && FunctionOneInteract)
 	{
@@ -52,20 +52,6 @@ void UDialogueSystem::NextMenssage()
 	else
 	{
 		OnDialogueEnded();
-	}
-
-}
-
-void UDialogueSystem::DialogueFunction()
-{
-	
-	if (!Player) return;
-
-	if (FunctionWidgetClass)
-	{
-		UBaseDialogueWidgetFunction* FunctionWidget = CreateWidget<UBaseDialogueWidgetFunction>(GetWorld(), FunctionWidgetClass);
-		FunctionWidget->AddToViewport();
-		FunctionWidget->ReturnMessage.AddDynamic(this, &UDialogueSystem::NextMenssage);
 	}
 
 }

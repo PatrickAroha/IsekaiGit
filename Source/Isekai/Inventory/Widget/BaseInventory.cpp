@@ -26,13 +26,14 @@ void UBaseInventory::GenerateInventory()
 	Slots.Empty();
 
 	const int32 NumberOfSlots = InventoryComponent ? InventoryComponent->InventorySize : 0;
-	const int32 NumColumns = 3;
+	const int32 NumColumns = 4;
 
 	for (int32 i = 0; i < NumberOfSlots; i++)
 	{
 		if (USlotInventory* NewSlot = CreateWidget<USlotInventory>(this, SlotClass))
 		{
 			Slots.Add(NewSlot);
+			NewSlot->EmptySlotTexture = EmptySlotTexture;
 			NewSlot->SlotIndex = i;
 			NewSlot->OwnerInventory = InventoryComponent;
 			
@@ -77,8 +78,7 @@ void UBaseInventory::FillSlots()
 				}
 				else
 				{
-					Slots[i]->ItemIconTexture = nullptr;
-					Slots[i]->ItemIcon->SetBrushFromTexture(nullptr);
+					Slots[i]->ItemIcon->SetBrushFromTexture(EmptySlotTexture);
 					Slots[i]->SlotIndexText->SetText(FText::GetEmpty());
 					Slots[i]->Quantity = 0;
 					Slots[i]->ItemInfo = nullptr;

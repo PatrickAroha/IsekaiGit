@@ -48,6 +48,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "UI | Inventory", meta = (ExposeOnSpawn))
 	UEquipmentComponent* EquipmentComponent;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UTexture2D* EmptySlotTexture;
+
 protected:
 	
 	virtual bool Initialize() override;

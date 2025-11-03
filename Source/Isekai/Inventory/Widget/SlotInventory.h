@@ -46,6 +46,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta=(ExposeOnSpawn = true))
 	UInventoryComponent* Inv;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UI")
+	UTexture2D* EmptySlotTexture;
+
 	UFUNCTION(BlueprintCallable)
 	void UpdateSlot();
 	

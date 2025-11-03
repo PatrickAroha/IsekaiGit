@@ -1,11 +1,6 @@
 #include "BaseDialogueWidgetFunction.h"
 
 
-void UBaseDialogueWidgetFunction::CallBack()
-{
-	ReturnMessage.Broadcast();
-}
-
 void UBaseDialogueWidgetFunction::NativeConstruct()
 {
 	Super::NativeConstruct();

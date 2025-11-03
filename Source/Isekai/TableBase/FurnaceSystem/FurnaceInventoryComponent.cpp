@@ -75,24 +75,21 @@ void UFurnaceInventoryComponent::FuelItem(int32 SlotIndex)
 void UFurnaceInventoryComponent::Melt()
 {
 	if (!GetWorld()) return;
-	//if (GetWorld()->GetTimerManager().IsTimerActive(FurnaceTimerHandle)) 
 	if (!bIsFuelItem || !bIsSmeltableItem) return;
 
 	UPDA_Master* Result = ItemSlots[0].Item ? ItemSlots[0].Item->SmeltItemResult.Item : nullptr;
 	if (!Result) return;
 
-	if (ItemSlots[2].Item &&
-		ItemSlots[2].Item->GetPrimaryAssetId() != Result->GetPrimaryAssetId()) return;
-
-	UE_LOG(LogTemp, Warning, TEXT("Alo"));
+	if (ItemSlots[2].Item && ItemSlots[2].Item->GetPrimaryAssetId() != Result->GetPrimaryAssetId()) return;
 	
 	if (ItemSlots[0].Quantity > 0)
 	{
-		if (CurrentEnergy <= 0) ConsumeFuel();
+	//	if (CurrentEnergy <= 0) ConsumeFuel();
 		CalculateTimeOfCook();
 		OnCooking = true;
 
 		if (!GetWorld()) return;
+		
 		GetWorld()->GetTimerManager().SetTimer(
 		FurnaceTimerHandle,
 		this,
@@ -124,7 +121,6 @@ void UFurnaceInventoryComponent::ConsumeFuel()
 
 void UFurnaceInventoryComponent::Cooking()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Alo"));
 
 	if (PercentageOfMelt >= SmeltDuration)
 	{
@@ -190,6 +186,7 @@ void UFurnaceInventoryComponent::SubtractSlot(int32 SlotIndex)
 {
 	ItemSlots[SlotIndex].Quantity--;
 	if (ItemSlots[SlotIndex].Quantity == 0) ItemSlots[SlotIndex].Item = nullptr;
+	OnItemUpdated.Broadcast();
 }
 
 void UFurnaceInventoryComponent::ResetSmeltItem()

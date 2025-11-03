@@ -104,6 +104,9 @@ public:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Furnace", meta=(EditCondition="Type==EItemCategory::Material", EditConditionHides))
     bool bFuel = false;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Item")
+    float Price = 0;
+
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Furnace", meta=(EditCondition="bFuel", EditConditionHides))
     int32 FuelEnergy = 0;
 
@@ -124,6 +127,7 @@ public:
 
     UPROPERTY(EditDefaultsOnly, Instanced, BlueprintReadOnly, Category="Item")
     UObjectItemBase* ItemLogic;
+    
 
     // 🔹 Só mostra atributos se for equipável
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Item|Equipment", meta=(EditCondition="bEquipable"))
