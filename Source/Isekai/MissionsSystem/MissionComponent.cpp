@@ -8,39 +8,31 @@ UMissionComponent::UMissionComponent()
 	
 }
 
-void UMissionComponent::TryReciveQuest(const TArray<TSoftObjectPtr<UPDA_MissionInfo>>& MyData)
+void UMissionComponent::TryReciveQuest(const TArray<UPDA_MissionInfo*>& MyData)
 {
 	AIsekaiCharacter* Player = Cast<AIsekaiCharacter>(GetOwner());
 	if (!Player) return;
 
-	TArray<TSoftObjectPtr<UPDA_MissionInfo>> Aprovadas;
+	TArray<UPDA_MissionInfo*> Aprovadas;
 	
-	for (const TSoftObjectPtr<UPDA_MissionInfo>& Ref : MyData)
+	for (UPDA_MissionInfo* Ref : MyData)
 	{
-		if (!Ref) continue;
-		UPDA_MissionInfo* DA = Ref.IsValid() ? Ref.Get() : Ref.LoadSynchronous();
-		if (!DA) continue;
-		
-		if (static_cast<uint8>(Player->Rank) >= static_cast<uint8>(DA->RequiredRank))
+		if (static_cast<uint8>(Player->Rank) >= static_cast<uint8>(Ref->RequiredRank))
 			Aprovadas.Add(Ref);
 	}
 
 	if (Aprovadas.Num() > 0) ReciveQuest(Aprovadas);
 }
 
-void UMissionComponent::ReciveQuest(const TArray<TSoftObjectPtr<UPDA_MissionInfo>>& MyData)
+void UMissionComponent::ReciveQuest(const TArray<UPDA_MissionInfo*>& MyData)
 {
-	for (const TSoftObjectPtr<UPDA_MissionInfo>& Ref : MyData)
+	for (UPDA_MissionInfo* Ref : MyData)
 	{
-		if (!Ref) continue;
-		UPDA_MissionInfo* DA = Ref.Get();
-		if (!DA) DA = Ref.LoadSynchronous();
-		if (!DA) continue;
 
 		FQuest NewQuest;
 		NewQuest.Data = Ref;
 		NewQuest.Status = EQuestStatus::InProgress;
-		for (const FQuestObjective& Obj : DA->Objectives)
+		for (const FQuestObjective& Obj : Ref->Objectives)
 		{
 			FObjectiveProgress NewObj;
 			NewObj.Type = Obj.Type;
@@ -90,22 +82,20 @@ void UMissionComponent::CompleteQuest(FQuest& Quest)
 	
 		Quest.Status = EQuestStatus::Completed;
 		ReciveBonus(Quest);
+		if (!Quest.Data->NextQuests.IsEmpty()) ReciveNewQuests(Quest);
 }
 
 void UMissionComponent::ReciveBonus(FQuest& Quest)
 {
-	UPDA_MissionInfo* DA = Quest.Data.Get();
-	if (!DA) DA = Quest.Data.LoadSynchronous();
-	if (!DA) return;
 
 	AIsekaiCharacter* Player = Cast<AIsekaiCharacter>(GetOwner());
 	if (!Player) return;
 	
-	if (DA->RewardXP > 0 && Player->LevelComponent)
-		Player->LevelComponent->AddXP(DA->RewardXP);
+	if (Quest.Data->RewardXP > 0 && Player->LevelComponent)
+		Player->LevelComponent->AddXP(Quest.Data->RewardXP);
 	
 	
-	for (const FQuestUnlock& MyUnlocked : DA->UnlocksOnComplete)
+	for (const FQuestUnlock& MyUnlocked : Quest.Data->UnlocksOnComplete)
 	{
 		if (MyUnlocked.Type == EUnlockType::Recipe)
 		{
@@ -147,5 +137,5 @@ void UMissionComponent::RemoveQuest(const FQuest& Quest)
 
 void UMissionComponent::ReciveNewQuests(FQuest& Quest)
 {
-	
+	ReciveQuest(Quest.Data->NextQuests);
 }

@@ -4,6 +4,7 @@
 #include "NPCFunctions.h"
 #include "GameFramework/Character.h"
 #include "Isekai/Interfaces/InteractInterface.h"
+#include "Isekai/MissionsSystem/MissionComponent.h"
 #include "BaseNPC.generated.h"
 
 class UBaseDialogueWidgetFunction;
@@ -36,13 +37,18 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition="NPCType == NPCType::Merchant"))
 	TArray<FItemSlot> ItemForSale;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
+	FGameplayTag NPCQuestTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UNPCFunctions> FunctionClass;
 	
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UDialogueSystem* DialogueSystem;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UMissionComponent* MissionComponent;
 
 	virtual void BeginPlay() override;
 	virtual void Interact_Implementation(AIsekaiCharacter* Player) override;

@@ -118,7 +118,7 @@ public:
 
 	//Novas quests que serão Adicionadas
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flow")
-	TArray<TSoftObjectPtr<UPDA_MissionInfo>> NextQuests;
+	TArray<UPDA_MissionInfo*> NextQuests;
 
 	//Requisitos Para Completar a taks
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flow")

@@ -5,6 +5,7 @@
 ABaseNPC::ABaseNPC(): DialogueSystem(nullptr)
 {
 	    DialogueSystem = CreateDefaultSubobject<UDialogueSystem>(TEXT("DialogueComponent"));
+		MissionComponent = CreateDefaultSubobject<UMissionComponent>(TEXT("MissionComponent"));
 
 		GetMesh()->SetupAttachment(RootComponent);
 		GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));

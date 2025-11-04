@@ -11,6 +11,7 @@
 #include "IsekaiCharacter.generated.h"
 
 
+class UMissionComponent;
 class ULevelComponent;
 class UStatusComponent;
 class UAtributosSystem;
@@ -86,6 +87,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UAtributosSystem* AtributosComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UMissionComponent* MissionComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UStatusComponent* StatusComponent;

@@ -42,13 +42,13 @@ struct FQuest
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TSoftObjectPtr<UPDA_MissionInfo> Data;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPDA_MissionInfo* Data;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY()
 	TArray<FObjectiveProgress> Objectives;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly)
 	EQuestStatus Status = EQuestStatus::InProgress;
 };
 
@@ -64,11 +64,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int32 CurrentMainQuestIndex = 0;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FQuest> Quests;
 
-	UFUNCTION() void TryReciveQuest(const TArray<TSoftObjectPtr<UPDA_MissionInfo>>& MyData);
-	UFUNCTION() void ReciveQuest(const TArray<TSoftObjectPtr<UPDA_MissionInfo>>& MyData);
+	UFUNCTION() void TryReciveQuest(const TArray<UPDA_MissionInfo*>& MyData);
+	UFUNCTION() void ReciveQuest(const TArray<UPDA_MissionInfo*>& MyData);
 	UFUNCTION() void TryProgressQuest(FGameplayTag EnemyTargetTag, EObjectiveType Type);
 	UFUNCTION() void TryCompleteQuest(FObjectiveProgress& Obj, FQuest& Quest);
 	UFUNCTION() void CompleteQuest(FQuest& Quest);

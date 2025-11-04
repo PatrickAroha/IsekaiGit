@@ -21,6 +21,7 @@
 #include "Isekai/AtributesSystem/LevelComponent.h"
 #include "Isekai/Inventory/PDA_Master.h"
 #include "Isekai/Inventory/Widget/Inv.h"
+#include "Isekai/MissionsSystem/MissionComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -32,6 +33,7 @@ AIsekaiCharacter::AIsekaiCharacter()
 	EquipmentComponent = CreateDefaultSubobject<UEquipmentComponent>(TEXT("InventoryEquipment"));
 	AtributosComponent = CreateDefaultSubobject<UAtributosSystem>(TEXT("AtributesComponent"));
 	StatusComponent = CreateDefaultSubobject<UStatusComponent>(TEXT("StatusComponent"));
+	MissionComponent = CreateDefaultSubobject<UMissionComponent>(TEXT("MissionComponent"));
 	
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	
