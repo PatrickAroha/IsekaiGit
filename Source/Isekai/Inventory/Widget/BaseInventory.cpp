@@ -70,7 +70,9 @@ void UBaseInventory::FillSlots()
 					if (IconTexture && Slots[i]->ItemIcon)
 					{
 						Slots[i]->ItemIconTexture = IconTexture;
+						Slots[i]->ItemIcon->SetVisibility(ESlateVisibility::Visible);
 						Slots[i]->ItemIcon->SetBrushFromTexture(IconTexture);
+						Slots[i]->BGText->SetVisibility(ESlateVisibility::Visible);
 						Slots[i]->SlotIndexText->SetText(FText::AsNumber(ItemSlots[i].Quantity));
 						Slots[i]->Quantity = ItemSlots[i].Quantity;
 						Slots[i]->ItemInfo = ItemSlots[i].Item;
@@ -78,8 +80,8 @@ void UBaseInventory::FillSlots()
 				}
 				else
 				{
-					Slots[i]->ItemIcon->SetBrushFromTexture(EmptySlotTexture);
-					Slots[i]->SlotIndexText->SetText(FText::GetEmpty());
+					Slots[i]->ItemIcon->SetVisibility(ESlateVisibility::Hidden);
+					Slots[i]->BGText->SetVisibility(ESlateVisibility::Hidden);
 					Slots[i]->Quantity = 0;
 					Slots[i]->ItemInfo = nullptr;
 				}

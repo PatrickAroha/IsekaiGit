@@ -14,7 +14,8 @@ void APlayerHUD::ToggleInventory(UInventoryComponent* InventoryComp, UEquipmentC
 		InventoryWidget->InventoryComponent = InventoryComp;
 		InventoryWidget->EquipmentComponent = EquipmentComp;
 		InventoryWidget->AddToViewport();
-
+		
+	
 		FInputModeUIOnly InputMode;
 		InputMode.SetWidgetToFocus(InventoryWidget->TakeWidget());
 		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);

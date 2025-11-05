@@ -37,6 +37,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(EditCondition="NPCType == NPCType::Merchant"))
 	TArray<FItemSlot> ItemForSale;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flow")
+	TArray<UPDA_MissionInfo*> Quests;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
 	FGameplayTag NPCQuestTag;
@@ -47,8 +50,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UDialogueSystem* DialogueSystem;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	UMissionComponent* MissionComponent;
 
 	virtual void BeginPlay() override;
 	virtual void Interact_Implementation(AIsekaiCharacter* Player) override;

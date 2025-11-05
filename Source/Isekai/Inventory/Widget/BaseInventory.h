@@ -19,9 +19,6 @@ class ISEKAI_API UBaseInventory : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	
-	UPROPERTY(meta = (BindWidget))
-	UButton* CloseWidget = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
 	UGridPanel* InventoryGrid = nullptr;

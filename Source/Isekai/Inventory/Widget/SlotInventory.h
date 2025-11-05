@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Components/Image.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/Border.h"
 #include "Components/TextBlock.h"
 #include "SlotInventory.generated.h"
 
@@ -25,6 +26,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 SlotIndex;
 
+	UPROPERTY(meta=(BindWidget), BlueprintReadOnly)
+	UBorder* BGText;
+	
 	UPROPERTY(meta=(BindWidget), EditAnywhere, BlueprintReadOnly)
 	UTextBlock* SlotIndexText;
 

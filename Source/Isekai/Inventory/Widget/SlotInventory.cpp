@@ -15,17 +15,19 @@ void USlotInventory::UpdateSlot()
 			if (InventoryComponent->ItemSlots[SlotIndex].Item->Icon)
 			{
 				ItemIconTexture = InventoryComponent->ItemSlots[SlotIndex].Item->Icon;
+				ItemIcon->SetVisibility(ESlateVisibility::Visible);
 				ItemIcon->SetBrushFromTexture(IconTexture);
 				Quantity = InventoryComponent->ItemSlots[SlotIndex].Quantity;
+				BGText->SetVisibility(ESlateVisibility::Visible);
 				SlotIndexText->SetText(FText::AsNumber(Quantity));
 				ItemInfo = InventoryComponent->ItemSlots[SlotIndex].Item;
 			}
 		}
 		else
 		{
-			ItemIconTexture = EmptySlotTexture;
-			ItemIcon->SetBrushFromTexture(ItemIconTexture);
-			SlotIndexText->SetText(FText::GetEmpty());
+			ItemIconTexture = nullptr;
+			ItemIcon->SetVisibility(ESlateVisibility::Hidden);
+			BGText->SetVisibility(ESlateVisibility::Hidden);
 			Quantity = 0;
 			ItemInfo = nullptr;
 		}

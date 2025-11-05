@@ -1,11 +1,11 @@
 #include "BaseNPC.h"
 
+#include "Isekai/Character/IsekaiCharacter.h"
 #include "Isekai/DialogueSystem/DialogueSystem.h"
 
 ABaseNPC::ABaseNPC(): DialogueSystem(nullptr)
 {
 	    DialogueSystem = CreateDefaultSubobject<UDialogueSystem>(TEXT("DialogueComponent"));
-		MissionComponent = CreateDefaultSubobject<UMissionComponent>(TEXT("MissionComponent"));
 
 		GetMesh()->SetupAttachment(RootComponent);
 		GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
@@ -24,6 +24,7 @@ void ABaseNPC::Interact_Implementation(AIsekaiCharacter* MyPlayer)
 		Player = MyPlayer;
 		DialogueSystem->StartDialogue(Player);
 	}
+	Player->MissionComponent->TryProgressQuest(NPCQuestTag, EObjectiveType::Dialogue);
 }
 
 void ABaseNPC::BeginFocus_Implementation()

@@ -47,16 +47,22 @@ void UMissionComponent::ReciveQuest(const TArray<UPDA_MissionInfo*>& MyData)
 
 void UMissionComponent::TryProgressQuest(FGameplayTag tag, EObjectiveType Type)
 {
+	UE_LOG(LogTemp, Warning, TEXT("TESTE"));
+
 	for (int32 qi = Quests.Num()-1; qi >= 0; --qi)
 	{
 		FQuest& Q = Quests[qi];
+		
+		UE_LOG(LogTemp, Warning, TEXT("1"));
 		if (Q.Status != EQuestStatus::InProgress) continue;
+		UE_LOG(LogTemp, Warning, TEXT("1"));
 
 		for (int32 oi = 0; oi < Q.Objectives.Num(); ++oi)
 		{
 			FObjectiveProgress& Obj = Q.Objectives[oi];
+			UE_LOG(LogTemp, Warning, TEXT("1"));
 			if (Obj.bCompleted || Obj.Type != Type || Obj.TargetTag != tag) continue;
-
+			UE_LOG(LogTemp, Warning, TEXT("2"));
 			TryCompleteQuest(Obj, Q);
 			if (Q.Status == EQuestStatus::Completed) { RemoveQuest(Q); break; }
 		}
@@ -72,6 +78,7 @@ void UMissionComponent::TryCompleteQuest(FObjectiveProgress& Obj, FQuest& Quest)
 	{
 		Obj.bCompleted = true;
 		CompleteQuest(Quest);
+		UE_LOG(LogTemp, Warning, TEXT("TESTE"));
 	}
 }
 
@@ -88,6 +95,8 @@ void UMissionComponent::CompleteQuest(FQuest& Quest)
 void UMissionComponent::ReciveBonus(FQuest& Quest)
 {
 
+	UE_LOG(LogTemp, Warning, TEXT("TESTE"));
+	
 	AIsekaiCharacter* Player = Cast<AIsekaiCharacter>(GetOwner());
 	if (!Player) return;
 	

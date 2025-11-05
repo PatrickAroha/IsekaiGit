@@ -35,6 +35,7 @@ struct FObjectiveProgress {
 
 	UPROPERTY()
 	int32 RequiredAmount = 1;
+	
 };
 
 USTRUCT(BlueprintType)
@@ -48,7 +49,7 @@ struct FQuest
 	UPROPERTY()
 	TArray<FObjectiveProgress> Objectives;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EQuestStatus Status = EQuestStatus::InProgress;
 };
 
@@ -67,9 +68,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FQuest> Quests;
 
-	UFUNCTION() void TryReciveQuest(const TArray<UPDA_MissionInfo*>& MyData);
+	UFUNCTION(BlueprintCallable) void TryReciveQuest(const TArray<UPDA_MissionInfo*>& MyData);
 	UFUNCTION() void ReciveQuest(const TArray<UPDA_MissionInfo*>& MyData);
-	UFUNCTION() void TryProgressQuest(FGameplayTag EnemyTargetTag, EObjectiveType Type);
+	UFUNCTION(BlueprintCallable) void TryProgressQuest(FGameplayTag EnemyTargetTag, EObjectiveType Type);
 	UFUNCTION() void TryCompleteQuest(FObjectiveProgress& Obj, FQuest& Quest);
 	UFUNCTION() void CompleteQuest(FQuest& Quest);
 	UFUNCTION() void ReciveBonus(FQuest& Quest);
