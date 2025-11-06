@@ -11,7 +11,7 @@ class UObjectItemBase;
 UENUM(BlueprintType)
 enum class EItemRarity : uint8
 {
-    None      UMETA(DisplayName = "none"),
+    None      UMETA(DisplayName = "None"),
     Common    UMETA(DisplayName = "Common"),
     Rare      UMETA(DisplayName = "Rare"),
     Epic      UMETA(DisplayName = "Epic"),
@@ -38,6 +38,17 @@ enum class EWeaponType : uint8
     Bow   UMETA(DisplayName = "Bow"),
     Staff UMETA(DisplayName = "Cajado"),
     Axe   UMETA(DisplayName = "Axe")
+};
+
+UENUM(BlueprintType)
+enum class EBuffType : uint8
+{
+    Damage UMETA(DisplayName = "Damage"),
+    Heal UMETA(DisplayName = "Heal"),
+    Mana UMETA(DisplayName = "Mana"),
+    Speed UMETA(DisplayName = "Speed"),
+    Strength UMETA(DisplayName = "Strength"),
+    Slow UMETA(DisplayName = "Slow")
 };
 
 UENUM(BlueprintType)
@@ -80,6 +91,12 @@ public:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Item")
     EItemRarity Rarity = EItemRarity::Common;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Item")
+    EBuffType BuffType;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Item")
+    int32 BuffValue = 0;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Item|Weapon", meta=(EditCondition="Type==EItemCategory::Weapon"))
     EWeaponType WeaponType = EWeaponType::None;

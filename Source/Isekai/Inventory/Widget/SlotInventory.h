@@ -9,6 +9,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSlotUpdated);
 
+class UBaseInventory;
 class UInventoryComponent;
 class UBaseInventoryComponent;
 class UPDA_Master;
@@ -20,6 +21,9 @@ class ISEKAI_API USlotInventory : public UUserWidget
 	
 public:
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UBaseInventory* WidgetOwner;
+	
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnSlotUpdated OnSlotUpdated;
 	

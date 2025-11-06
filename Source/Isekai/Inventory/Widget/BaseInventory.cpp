@@ -33,6 +33,7 @@ void UBaseInventory::GenerateInventory()
 		if (USlotInventory* NewSlot = CreateWidget<USlotInventory>(this, SlotClass))
 		{
 			Slots.Add(NewSlot);
+			NewSlot->WidgetOwner = this;
 			NewSlot->EmptySlotTexture = EmptySlotTexture;
 			NewSlot->SlotIndex = i;
 			NewSlot->OwnerInventory = InventoryComponent;
