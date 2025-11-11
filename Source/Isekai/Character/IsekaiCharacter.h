@@ -64,6 +64,9 @@ class AIsekaiCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* UsePotion;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* OpenEquipmentWindow;
 	
 	UPROPERTY(EditAnywhere, Category = "Character | Interaction")
 	TScriptInterface<IInteractInterface> TargetInteractable;
@@ -102,6 +105,9 @@ public:
 
 	UPROPERTY()
 	ERequiredRank Rank = ERequiredRank::None;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EquipmentePlayer", meta=(ExposeOnSpawn))
+	AActor* EquipmentCharacter;
 	
 	AIsekaiCharacter();
 
@@ -124,6 +130,9 @@ protected:
 	void NextPotionInput();
 	
 	void UseEquipPotion();
+
+	UFUNCTION(BlueprintCallable)
+	void EquipmentWindow();
 
 	virtual void NotifyControllerChanged() override;
 

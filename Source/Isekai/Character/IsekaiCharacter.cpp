@@ -97,6 +97,8 @@ void AIsekaiCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(NextEquipPotion, ETriggerEvent::Triggered, this, &AIsekaiCharacter::NextPotionInput);
 
 		EnhancedInputComponent->BindAction(UsePotion, ETriggerEvent::Started, this, &AIsekaiCharacter::UseEquipPotion);
+
+		EnhancedInputComponent->BindAction(OpenEquipmentWindow, ETriggerEvent::Started, this, &AIsekaiCharacter::EquipmentWindow);
 	}
 	else
 	{
@@ -230,4 +232,10 @@ void AIsekaiCharacter::UseEquipPotion()
 		}
 	}
 }
+
+void AIsekaiCharacter::EquipmentWindow()
+{
+
+}
+
 
