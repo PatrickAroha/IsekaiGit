@@ -49,6 +49,7 @@ void ULevelWidget::OnLevelUp(int32 NewLevel)
 {
 	if (LevelText)
 	{
-		LevelText->SetText(FText::AsNumber(NewLevel));
+		FString LevelString = FString::Printf(TEXT("Level. %d"), NewLevel);
+		LevelText->SetText(FText::FromString(LevelString));
 	}
 }
